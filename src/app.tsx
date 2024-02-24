@@ -21,6 +21,7 @@ Deno.serve(async (req: Request) => {
       showOnlyBoard,
       index,
       warningMessage,
+      urlOrigin,
     } = parseParams(url);
 
     let state: State = await getGameState(gameId, gameMode, boardSize);
@@ -147,8 +148,8 @@ Deno.serve(async (req: Request) => {
       errorMessage = err.message;
     }
 
-    const postUrl = `${req.url}/move?index=${state.actions.length}`;
-    const imageUrl = `${req.url}/view?message=${errorMessage}&index=${
+    const postUrl = `${urlOrigin}/move?index=${state.actions.length}`;
+    const imageUrl = `${urlOrigin}/view?message=${errorMessage}&index=${
       state.actions.length
     }&time=${Date.now()}`;
 
@@ -237,5 +238,6 @@ const parseParams = (url: string) => {
     showOnlyBoard,
     index,
     warningMessage,
+    urlOrigin: theUrl.origin,
   };
 };
