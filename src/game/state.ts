@@ -96,7 +96,17 @@ export const gameMove = async (
 
   const cells = generateCellsBasedOnMoves(state);
 
+  state.activeTeamId = state.activeTeamId === "A" ? "B" : "A";
+
   state.nextPossibleMoves = generatePossibleMoves(state, cells);
+
+  /**
+   * If player don't have any move, switch to the next player
+   */
+  if (!state.nextPossibleMoves.length) {
+    state.activeTeamId = state.activeTeamId === "A" ? "B" : "A";
+    state.nextPossibleMoves = generatePossibleMoves(state, cells);
+  }
 
   const dbResult = await db.games.updateOne(
     { id },

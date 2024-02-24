@@ -148,7 +148,9 @@ Deno.serve(async (req: Request) => {
     }
 
     const postUrl = `${req.url}/move?index=${state.actions.length}`;
-    const imageUrl = `${req.url}/view?message=${errorMessage}&index=${state.actions.length}`;
+    const imageUrl = `${req.url}/view?message=${errorMessage}&index=${
+      state.actions.length
+    }&time=${Date.now()}`;
 
     const html = getFrameHtml(
       {
