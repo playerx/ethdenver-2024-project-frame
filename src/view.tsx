@@ -20,9 +20,12 @@ type Props = {
   copyright: string;
   version: string;
   showOnlyBoard: boolean;
+  boardSize: number;
 
   leftTeam: Team;
   rightTeam: Team;
+
+  warningMessage: string;
 };
 
 export const buildView = ({
@@ -33,7 +36,9 @@ export const buildView = ({
   bottomTitle,
   copyright,
   version,
+  boardSize,
   showOnlyBoard,
+  warningMessage,
 }: Props) => {
   return (
     <div
@@ -104,9 +109,13 @@ export const buildView = ({
             justifyContent: "center",
           }}
         >
-          <div>{challenger1Title}</div>
-          <div>vs</div>
-          <div>{challenger2Title}</div>
+          <div style={{ color: Color(leftTeam.color).darken(0.2).hex() }}>
+            {challenger1Title}
+          </div>
+          <div style={{ marginLeft: 7, marginRight: 7 }}>vs</div>
+          <div style={{ color: Color(rightTeam.color).darken(0.2).hex() }}>
+            {challenger2Title}
+          </div>
         </div>
 
         <div
@@ -116,17 +125,17 @@ export const buildView = ({
             border: "1px solid silver",
           }}
         >
-          {new Array(10).fill(0).map((_, y) => (
+          {new Array(boardSize).fill(0).map((_, y) => (
             <div
               style={{
                 display: "flex",
               }}
             >
-              {new Array(10).fill(0).map((_, x) => (
+              {new Array(boardSize).fill(0).map((_, x) => (
                 <div
                   style={{
-                    width: 55,
-                    height: 55,
+                    width: 65,
+                    height: 65,
                     border: "1px solid #f4f4f4",
                     display: "flex",
                     alignItems: "center",
@@ -141,8 +150,8 @@ export const buildView = ({
                           Color(leftTeam.color).darken(0.3).hex(),
                         backgroundColor: leftTeam.color,
                         borderRadius: "100%",
-                        width: 40,
-                        height: 40,
+                        width: 50,
+                        height: 50,
                       }}
                     ></div>
                   )}
@@ -154,8 +163,8 @@ export const buildView = ({
                           Color(rightTeam.color).darken(0.3).hex(),
                         backgroundColor: rightTeam.color,
                         borderRadius: "100%",
-                        width: 40,
-                        height: 40,
+                        width: 50,
+                        height: 50,
                       }}
                     ></div>
                   )}
@@ -166,13 +175,13 @@ export const buildView = ({
                         style={{
                           border:
                             "1px solid " +
-                            Color(leftTeam.color).lighten(0.7).hex(),
+                            Color(leftTeam.color).lighten(0.6).hex(),
                           backgroundColor: Color(leftTeam.color)
                             .lighten(0.75)
                             .hex(),
                           borderRadius: "100%",
-                          width: 35,
-                          height: 35,
+                          width: 45,
+                          height: 45,
                           opacity: 1,
                           color: leftTeam.color,
                           display: "flex",
@@ -196,13 +205,13 @@ export const buildView = ({
                         style={{
                           border:
                             "1px solid " +
-                            Color(rightTeam.color).lighten(0.7).hex(),
+                            Color(rightTeam.color).lighten(0.6).hex(),
                           backgroundColor: Color(rightTeam.color)
                             .lighten(0.75)
                             .hex(),
                           borderRadius: "100%",
-                          width: 35,
-                          height: 35,
+                          width: 45,
+                          height: 45,
                           opacity: 1,
                           color: Color(rightTeam.color).darken(0.5).hex(),
                           display: "flex",

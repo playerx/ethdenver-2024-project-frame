@@ -1,81 +1,214 @@
 import { ImageResponse } from "npm:@vercel/og";
+import { DRAW } from "./game/analyzeWinner.ts";
+import { gameMove, getGameState } from "./game/state.ts";
+import { Action, GameMode } from "./game/types.ts";
 import { getFrameHtml } from "./helper/getFrameHtml.ts";
 import { buildView } from "./view.tsx";
 
-Deno.serve((req: Request) => {
-  const url = new URL(req.url);
-  if (url.pathname === "/view") {
-    const showOnlyBoard = !url.searchParams.has("wide");
+const ROUTE = new URLPattern({ pathname: "/:gameId{/:action}?" });
 
-    return new ImageResponse(
-      buildView({
-        challenger1Title: "@playerx",
-        challenger2Title: "followers",
-        bottomTitle: "Reversi",
-        version: "v0.1.0",
-        copyright: "",
-        showOnlyBoard,
+Deno.serve(async (req: Request) => {
+  try {
+    const url = req.url.endsWith("/")
+      ? req.url.slice(0, req.url.length - 1)
+      : req.url;
 
-        leftTeam: {
-          name: "Blue Team",
-          color: "#2196F3",
-          moves: [
-            [4, 4],
-            [4, 5],
-          ],
-          nextMovePreviews: [
-            [6, 3],
-            [6, 4],
-            [6, 5],
-            [6, 6],
-          ],
-          usernames: ["@playerx"],
-        },
+    const {
+      gameId,
+      action,
+      gameMode,
+      boardSize,
+      showOnlyBoard,
+      index,
+      warningMessage,
+    } = parseParams(url);
 
-        rightTeam: {
-          name: "Red Team",
-          color: "#F44336",
-          moves: [
-            [5, 4],
-            [5, 5],
-          ],
-          nextMovePreviews: [],
-          usernames: ["@ez", "@someone.eth", "@rtr.eth"],
-        },
-      }),
+    let state = getGameState(gameId, gameMode, boardSize);
+
+    if (action === "/view") {
+      return new ImageResponse(
+        buildView({
+          challenger1Title: "@playerx",
+          challenger2Title: "followers",
+          bottomTitle: "Reversi",
+          version: "v0.1.0",
+          copyright: "",
+          boardSize,
+          showOnlyBoard,
+          warningMessage,
+
+          leftTeam: {
+            name: "Blue Team",
+            color: "#2196F3",
+            moves: state.moves
+              .filter((x) => x[0] === "A")
+              .map((x) => [x[1], x[2]]),
+
+            nextMovePreviews: state.nextPossibleMoves
+              .filter((x) => x[0] === "A")
+              .map((x) => [x[1], x[2]]),
+
+            usernames: Object.values(state.team.A).map((x) => x.username),
+          },
+
+          rightTeam: {
+            name: "Red Team",
+            color: "#F44336",
+            moves: state.moves
+              .filter((x) => x[0] === "B")
+              .map((x) => [x[1], x[2]]),
+
+            nextMovePreviews: state.nextPossibleMoves
+              .filter((x) => x[0] === "B")
+              .map((x) => [x[1], x[2]]),
+
+            usernames: Object.values(state.team.B).map((x) => x.username),
+          },
+        }),
+        {
+          width: showOnlyBoard ? 630 : 1200,
+          height: 630,
+          headers: {
+            "Cache-Control": "no-cache",
+          },
+        }
+      );
+    }
+
+    let errorMessage = "";
+    let isFinished = false;
+    let isDraw = false;
+
+    try {
+      if (action === "/move") {
+        if (state.actions.length !== index) {
+          throw new Error(
+            "Someone already made a move, now you see updated state."
+          );
+        }
+
+        const postData = await req.json();
+        const fid = postData?.untrustedData?.castId?.fid;
+        if (!fid) {
+          throw new Error("fid not found in request");
+        }
+
+        const inputText: string =
+          postData?.untrustedData?.inputText?.toUpperCase();
+        if (!inputText) {
+          throw new Error("Please type the move: A, B, etc.");
+        }
+
+        const moveIndex = inputText.charCodeAt(0) - "A".charCodeAt(0);
+        const move = state.nextPossibleMoves[moveIndex];
+        if (!move) {
+          throw new Error("Invalid move");
+        }
+
+        const messageBytes = postData?.trustedData?.messageBytes;
+        if (!messageBytes) {
+          throw new Error("Invalid messageBytes");
+        }
+
+        // TODO: validate messageBytes and fid here as well
+
+        const action: Action = [fid, move[1], move[2], messageBytes];
+
+        const res = gameMove(gameId, action, gameMode, boardSize);
+
+        if (res) {
+          isFinished = true;
+          isDraw = res === DRAW;
+        }
+
+        state = getGameState(gameId, gameMode, boardSize);
+      }
+    } catch (err) {
+      errorMessage = err.message;
+    }
+
+    const postUrl = `${req.url}/move?index=${state.actions.length}`;
+    const imageUrl = `${req.url}/view?message=${errorMessage}`;
+
+    const html = getFrameHtml(
       {
-        width: showOnlyBoard ? 630 : 1200,
-        height: 630,
-        headers: {
-          "Cache-Control": "no-cache",
-        },
+        ogImage: `${imageUrl}?wide`,
+        image: imageUrl,
+        imageAspectRatio: "1:1",
+        postUrl: postUrl,
+        inputText: "Your Move, type: A, B, C, etc.",
+        buttons: isFinished
+          ? [
+              {
+                label: "Play Again",
+                action: "link",
+                target: "https://google.com",
+              },
+              { label: "Mint Game", action: "link", target: "https://mint.me" },
+            ]
+          : [
+              { label: "Move", action: "post" },
+              { label: "Refresh", action: "post" },
+            ],
+        version: "vNext",
+      },
+      {
+        title: "Reversi Game",
+        og: { title: "Reversi Game" },
+        htmlBody: `
+          <img src="${imageUrl}?wide" />
+        `,
       }
     );
+
+    return new Response(html, {
+      status: 200,
+      headers: {
+        "content-type": "text/html",
+      },
+    });
+  } catch (err) {
+    return new Response(err.message, { status: 400 });
+  }
+});
+
+const parseParams = (url: string) => {
+  const requestData = ROUTE.exec(url);
+  if (!requestData) {
+    throw new Error("Please provide gameId in the url");
   }
 
-  const html = getFrameHtml(
-    {
-      image: req.url + "view",
-      imageAspectRatio: "1:1",
-      ogImage: req.url + "view?wide",
-      postUrl: req.url,
-      inputText: "Your Move, type: A, B, C, etc.",
-      buttons: [{ label: "Move", action: "post" }],
-      version: "vNext",
-    },
-    {
-      title: "Reversi Game",
-      og: { title: "Reversi Game" },
-      htmlBody: `
-        <img src="${req.url + "view?wide"}" />
-      `,
-    }
-  );
+  const theUrl = new URL(url);
 
-  return new Response(html, {
-    status: 200,
-    headers: {
-      "content-type": "text/html",
-    },
-  });
-});
+  const gameId = requestData.pathname.groups.gameId!;
+  const action = requestData.pathname.groups.action!;
+
+  let gameMode = theUrl.searchParams.get("mode")! as GameMode;
+  if (!GameMode[gameMode]) {
+    gameMode = GameMode.OPEN;
+  }
+
+  let boardSize = 8;
+  const boardSizeString = theUrl.searchParams.get("boardSize")!;
+  if (boardSize) {
+    const boardSizeInt = parseInt(boardSizeString, 10);
+    if (boardSizeInt && boardSizeInt >= 4 && boardSizeInt <= 10) {
+      boardSize = boardSizeInt;
+    }
+  }
+
+  const showOnlyBoard = !theUrl.searchParams.has("wide");
+  const index = +(theUrl.searchParams.get("index") ?? "0");
+
+  const warningMessage = theUrl.searchParams.get("message") ?? "";
+
+  return {
+    gameId,
+    action,
+    gameMode,
+    boardSize,
+    showOnlyBoard,
+    index,
+    warningMessage,
+  };
+};
