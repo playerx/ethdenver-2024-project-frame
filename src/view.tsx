@@ -66,10 +66,15 @@ export const buildView = ({
         >
           <div
             style={{
-              color: "#1565C0",
+              color: Color(leftTeam.color).darken(0.2).hex(),
               fontWeight: "bold",
               fontSize: 35,
-              paddingBottom: 20,
+              paddingBottom: 0,
+              marginBottom: 20,
+              marginRight: 30,
+              alignSelf: "stretch",
+              borderBottom:
+                "3px solid " + Color(leftTeam.color).darken(0.2).hex(),
             }}
           >
             {leftTeam.name}
@@ -300,10 +305,17 @@ export const buildView = ({
         >
           <div
             style={{
-              color: "#C62828",
+              color: Color(rightTeam.color).darken(0.2).hex(),
               fontWeight: "bold",
               fontSize: 35,
-              paddingBottom: 20,
+              paddingBottom: 0,
+              marginBottom: 20,
+              marginLeft: 30,
+              alignSelf: "stretch",
+              display: "flex",
+              justifyContent: "flex-end",
+              borderBottom:
+                "3px solid " + Color(rightTeam.color).darken(0.2).hex(),
             }}
           >
             {rightTeam.name}

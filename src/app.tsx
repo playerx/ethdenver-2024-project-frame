@@ -154,7 +154,8 @@ Deno.serve(async (req: Request) => {
               {
                 label: "Play Again",
                 action: "link",
-                target: "https://google.com",
+                target:
+                  "https://warpcast.com/~/compose?text=Hello%20world!&embeds[]=https://farcaster.xyz",
               },
               {
                 label: "Claim",
