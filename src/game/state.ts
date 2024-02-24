@@ -56,9 +56,9 @@ export const gameMove = async (
       {
         const [fid, y, x] = action;
 
-        let playerTeam: TeamId | null = state.team.A[fid.toString()]
+        let playerTeam: TeamId | null = state.team.A["user_" + fid]
           ? "A"
-          : state.team.B[fid.toString()]
+          : state.team.B["user_" + fid]
           ? "B"
           : null;
 
@@ -76,7 +76,7 @@ export const gameMove = async (
 
           const username = userInfo?.username ?? "User " + fid;
 
-          state.team[state.activeTeamId][fid.toString()] = { username };
+          state.team[state.activeTeamId]["user_" + fid] = { username };
         }
 
         if (playerTeam !== state.activeTeamId) {
@@ -98,7 +98,12 @@ export const gameMove = async (
 
   state.nextPossibleMoves = generatePossibleMoves(state, cells);
 
-  await db.games.updateOne({ id }, { $set: { state } }, { upsert: true });
+  const dbResult = await db.games.updateOne(
+    { id },
+    { $set: { state } },
+    { upsert: true }
+  );
+  console.log("dbResult", dbResult);
 
   const winner = analyzeWinner(cells);
 

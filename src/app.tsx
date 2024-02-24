@@ -25,6 +25,7 @@ Deno.serve(async (req: Request) => {
 
     let state: State = await getGameState(gameId, gameMode, boardSize);
 
+    console.log(state);
     console.log(
       gameId,
       action,
