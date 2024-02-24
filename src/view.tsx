@@ -216,9 +216,9 @@ export const buildView = ({
                         style={{
                           border:
                             "1px solid " +
-                            Color(rightTeam.color).lighten(0.6).hex(),
+                            Color(rightTeam.color).lighten(0.55).hex(),
                           backgroundColor: Color(rightTeam.color)
-                            .lighten(0.75)
+                            .lighten(0.65)
                             .hex(),
                           borderRadius: "100%",
                           width: 45,
@@ -234,7 +234,7 @@ export const buildView = ({
                       >
                         {String.fromCharCode(
                           "A".charCodeAt(0) +
-                            leftTeam.nextMovePreviews.indexOf(x)
+                            rightTeam.nextMovePreviews.indexOf(x)
                         )}
                       </div>
                     ))}
