@@ -144,7 +144,11 @@ Deno.serve(async (req: Request) => {
                 action: "link",
                 target: "https://google.com",
               },
-              { label: "Mint Game", action: "link", target: "https://mint.me" },
+              {
+                label: "Claim",
+                action: "link",
+                target: `https://mint.me/${gameId}`,
+              },
             ]
           : [
               { label: "Move", action: "post" },
