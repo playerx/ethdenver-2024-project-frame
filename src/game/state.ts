@@ -41,7 +41,7 @@ export const getGameState = (
   return state;
 };
 
-export const gameMove = (
+export const gameMove = async (
   id: string,
   action: Action,
   gameMode: GameMode,
@@ -67,7 +67,17 @@ export const gameMove = (
           playerTeam = state.activeTeamId;
 
           // TODO: get username by fid
-          state.team[state.activeTeamId][fid] = { username: fid.toString() };
+          const userData = await fetch(
+            "https://fnames.farcaster.xyz/transfers?fid=" + fid
+          ).then((x) => x.json());
+
+          const userInfo = userData.transfers.sort(
+            (a, b) => b.timestamp - a.timestamp
+          )[0];
+
+          const username = userInfo?.username ?? "User " + fid;
+
+          state.team[state.activeTeamId][fid] = { username };
         }
 
         if (playerTeam !== state.activeTeamId) {

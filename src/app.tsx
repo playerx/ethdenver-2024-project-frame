@@ -124,9 +124,9 @@ Deno.serve(async (req: Request) => {
 
         const action: Action = [fid, move[1], move[2], messageBytes];
 
-        console.log(action);
+        console.log("move", action);
 
-        const res = gameMove(gameId, action, gameMode, boardSize);
+        const res = await gameMove(gameId, action, gameMode, boardSize);
 
         if (res) {
           isFinished = true;
