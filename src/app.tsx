@@ -148,8 +148,8 @@ Deno.serve(async (req: Request) => {
       errorMessage = err.message;
     }
 
-    const postUrl = `${urlOrigin}/move?index=${state.actions.length}`;
-    const imageUrl = `${urlOrigin}/view?message=${errorMessage}&index=${
+    const postUrl = `${urlOrigin}/${gameId}/move?index=${state.actions.length}`;
+    const imageUrl = `${urlOrigin}/${gameId}/view?message=${errorMessage}&index=${
       state.actions.length
     }&time=${Date.now()}`;
 
