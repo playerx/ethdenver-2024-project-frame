@@ -25,8 +25,17 @@ Deno.serve(async (req: Request) => {
 
     let state = getGameState(gameId, gameMode, boardSize);
 
+    console.log(
+      gameId,
+      action,
+      gameMode,
+      boardSize,
+      showOnlyBoard,
+      index,
+      warningMessage
+    );
+
     if (action === "view") {
-      console.log(1, state);
       return new ImageResponse(
         buildView({
           challenger1Title: "@playerx",
@@ -114,6 +123,8 @@ Deno.serve(async (req: Request) => {
         // TODO: validate messageBytes and fid here as well
 
         const action: Action = [fid, move[1], move[2], messageBytes];
+
+        console.log(action);
 
         const res = gameMove(gameId, action, gameMode, boardSize);
 
