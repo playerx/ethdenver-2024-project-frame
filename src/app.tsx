@@ -25,7 +25,8 @@ Deno.serve(async (req: Request) => {
 
     let state = getGameState(gameId, gameMode, boardSize);
 
-    if (action === "/view") {
+    if (action === "view") {
+      console.log(1, state);
       return new ImageResponse(
         buildView({
           challenger1Title: "@playerx",
@@ -80,7 +81,7 @@ Deno.serve(async (req: Request) => {
     let isDraw = false;
 
     try {
-      if (action === "/move") {
+      if (action === "move") {
         if (state.actions.length !== index) {
           throw new Error(
             "Someone already made a move, now you see updated state."
@@ -132,7 +133,7 @@ Deno.serve(async (req: Request) => {
 
     const html = getFrameHtml(
       {
-        ogImage: `${imageUrl}?wide`,
+        ogImage: `${imageUrl}&wide`,
         image: imageUrl,
         imageAspectRatio: "1:1",
         postUrl: postUrl,
@@ -160,7 +161,7 @@ Deno.serve(async (req: Request) => {
         title: "Reversi Game",
         og: { title: "Reversi Game" },
         htmlBody: `
-          <img src="${imageUrl}?wide" />
+          <img src="${imageUrl}&wide" />
         `,
       }
     );

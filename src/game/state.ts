@@ -3,10 +3,10 @@ import { generatePossibleMoves } from "./generatePossibleMoves.ts";
 import { Action, GameMode, Move, State, TeamId } from "./types.ts";
 
 const DEFAULT_MOVES: Move[] = [
-  ["A", 4, 4],
-  ["A", 4, 5],
-  ["B", 5, 4],
-  ["B", 5, 5],
+  ["A", 3, 3],
+  ["A", 3, 4],
+  ["B", 4, 3],
+  ["B", 4, 4],
 ];
 
 const states = new Map<string, State>();

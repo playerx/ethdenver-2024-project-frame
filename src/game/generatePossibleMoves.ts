@@ -7,8 +7,8 @@ export function generatePossibleMoves(
 ): Move[] {
   const result: Point[] = [];
 
-  for (let x = 0; x < cells.length; x++) {
-    for (let y = 0; y < cells[0].length; y++) {
+  for (let y = 0; y < cells.length; y++) {
+    for (let x = 0; x < cells[0].length; x++) {
       if (cells[y][x]) {
         continue;
       }
@@ -21,5 +21,5 @@ export function generatePossibleMoves(
     }
   }
 
-  return result.map((x) => [state.activeTeamId, x.x, x.y]);
+  return result.map((x) => [state.activeTeamId, x.y, x.x]);
 }
