@@ -56,9 +56,9 @@ export const gameMove = async (
       {
         const [fid, y, x] = action;
 
-        let playerTeam = state.team.A[fid]
+        let playerTeam = state.team.A[fid.toString()]
           ? "A"
-          : state.team.B[fid]
+          : state.team.B[fid.toString()]
           ? "B"
           : null;
 
@@ -76,7 +76,7 @@ export const gameMove = async (
 
           const username = userInfo?.username ?? "User " + fid;
 
-          state.team[state.activeTeamId][fid] = { username };
+          state.team[state.activeTeamId][fid.toString()] = { username };
         }
 
         if (playerTeam !== state.activeTeamId) {
