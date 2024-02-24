@@ -101,7 +101,7 @@ export const gameMove = async (
 
   const winner = analyzeWinner(cells);
 
-  return winner;
+  return { state, winner };
 };
 
 const generateCellsBasedOnMoves = (state: State) => {

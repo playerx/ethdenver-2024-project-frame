@@ -126,21 +126,28 @@ Deno.serve(async (req: Request) => {
 
         console.log("move", action);
 
-        const res = await gameMove(gameId, action, gameMode, boardSize);
+        const { state: newState, winner } = await gameMove(
+          gameId,
+          action,
+          gameMode,
+          boardSize
+        );
 
-        if (res) {
+        console.log(newState);
+
+        if (winner) {
           isFinished = true;
-          isDraw = res === DRAW;
+          isDraw = winner === DRAW;
         }
 
-        state = getGameState(gameId, gameMode, boardSize);
+        state = newState;
       }
     } catch (err) {
       errorMessage = err.message;
     }
 
     const postUrl = `${req.url}/move?index=${state.actions.length}`;
-    const imageUrl = `${req.url}/view?message=${errorMessage}`;
+    const imageUrl = `${req.url}/view?message=${errorMessage}&index=${state.actions.length}`;
 
     const html = getFrameHtml(
       {
