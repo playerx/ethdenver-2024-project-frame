@@ -98,7 +98,7 @@ export const gameMove = async (
 
   state.nextPossibleMoves = generatePossibleMoves(state, cells);
 
-  await db.games.updateOne({ id }, { $set: { state } });
+  await db.games.updateOne({ id }, { $set: { state } }, { upsert: true });
 
   const winner = analyzeWinner(cells);
 
