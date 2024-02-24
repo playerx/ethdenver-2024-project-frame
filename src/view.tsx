@@ -83,8 +83,10 @@ export const buildView = ({
               marginRight: 15,
             }}
           >
-            {["@playerx"].map((x) => (
-              <div style={{ padding: 10 }}>{x}</div>
+            {leftTeam.usernames.map((x) => (
+              <div key={x} style={{ padding: 10 }}>
+                {x}
+              </div>
             ))}
           </div>
         </div>
@@ -127,12 +129,14 @@ export const buildView = ({
         >
           {new Array(boardSize).fill(0).map((_, y) => (
             <div
+              key={"col" + y}
               style={{
                 display: "flex",
               }}
             >
               {new Array(boardSize).fill(0).map((_, x) => (
                 <div
+                  key={"row" + x}
                   style={{
                     width: 65,
                     height: 65,
@@ -170,8 +174,9 @@ export const buildView = ({
                   )}
                   {leftTeam.nextMovePreviews
                     .filter(([mY, mX]) => mY === y && mX === x)
-                    .map((x) => (
+                    .map((x, i) => (
                       <div
+                        key={"a_next_move" + i}
                         style={{
                           border:
                             "1px solid " +
@@ -200,8 +205,9 @@ export const buildView = ({
 
                   {rightTeam.nextMovePreviews
                     .filter(([mY, mX]) => mY === y && mX === x)
-                    .map((x) => (
+                    .map((x, i) => (
                       <div
+                        key={"a_next_move" + i}
                         style={{
                           border:
                             "1px solid " +
@@ -312,7 +318,9 @@ export const buildView = ({
             }}
           >
             {rightTeam.usernames.map((x) => (
-              <div style={{ padding: 10 }}>{x}</div>
+              <div key={x} style={{ padding: 10 }}>
+                {x}
+              </div>
             ))}
           </div>
         </div>
