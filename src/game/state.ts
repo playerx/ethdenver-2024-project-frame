@@ -56,7 +56,7 @@ export const gameMove = async (
       {
         const [fid, y, x] = action;
 
-        let playerTeam = state.team.A[fid.toString()]
+        let playerTeam: TeamId | null = state.team.A[fid.toString()]
           ? "A"
           : state.team.B[fid.toString()]
           ? "B"
