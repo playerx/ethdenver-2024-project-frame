@@ -1,3 +1,4 @@
+import { db } from "../db.ts";
 import { analyzeWinner } from "./analyzeWinner.ts";
 import { generatePossibleMoves } from "./generatePossibleMoves.ts";
 import { Action, GameMode, Move, State, TeamId } from "./types.ts";
@@ -9,14 +10,12 @@ const DEFAULT_MOVES: Move[] = [
   ["B", 4, 4],
 ];
 
-const states = new Map<string, State>();
-
-export const getGameState = (
+export const getGameState = async (
   id: string,
   gameMode: GameMode,
   boardSize: number
 ) => {
-  let state = states.get(id);
+  let state = await db.games.getById(id).then((x) => x?.state);
   if (!state) {
     state = {
       id,
@@ -47,7 +46,7 @@ export const gameMove = async (
   gameMode: GameMode,
   boardSize: number
 ) => {
-  const state = getGameState(id, gameMode, boardSize);
+  const state: State = await getGameState(id, gameMode, boardSize);
 
   let move: Move = null as any;
 
@@ -98,6 +97,8 @@ export const gameMove = async (
   const cells = generateCellsBasedOnMoves(state);
 
   state.nextPossibleMoves = generatePossibleMoves(state, cells);
+
+  await db.games.updateOne({ id }, { $set: { state } });
 
   const winner = analyzeWinner(cells);
 

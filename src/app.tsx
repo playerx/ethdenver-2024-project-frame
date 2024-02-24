@@ -1,7 +1,7 @@
 import { ImageResponse } from "npm:@vercel/og";
 import { DRAW } from "./game/analyzeWinner.ts";
 import { gameMove, getGameState } from "./game/state.ts";
-import { Action, GameMode } from "./game/types.ts";
+import { Action, GameMode, State } from "./game/types.ts";
 import { getFrameHtml } from "./helper/getFrameHtml.ts";
 import { buildView } from "./view.tsx";
 
@@ -23,7 +23,7 @@ Deno.serve(async (req: Request) => {
       warningMessage,
     } = parseParams(url);
 
-    let state = getGameState(gameId, gameMode, boardSize);
+    let state: State = await getGameState(gameId, gameMode, boardSize);
 
     console.log(
       gameId,
