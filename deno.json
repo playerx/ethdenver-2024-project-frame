@@ -1,0 +1,16 @@
+{
+  "tasks": {
+    "start": "deno run --watch -A src/app.tsx",
+    "debug": "deno run --inspect -A src/app.tsx"
+  },
+  "fmt": {
+    "semiColons": false,
+    "singleQuote": true
+  },
+  "compilerOptions": {
+    "jsx": "react",
+    "jsxFactory": "React.createElement",
+    "jsxFragmentFactory": "React.Fragment",
+    "noImplicitAny": false
+  }
+}
