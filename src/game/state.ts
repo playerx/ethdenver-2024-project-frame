@@ -125,6 +125,8 @@ export const gameMove = async (
 
   const winner = analyzeWinner(state.cells);
 
+  console.log("winner check", winner);
+
   if (winner) {
     state.winnerTeamId = winner;
     state.activeTeamId = "" as any;
