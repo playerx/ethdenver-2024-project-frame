@@ -22,26 +22,25 @@ Deno.serve(async (req: Request) => {
       index,
       warningMessage,
       urlOrigin,
+      viewerFid,
     } = parseParams(url);
 
     let state: State = await getGameState(gameId, gameMode, boardSize);
 
-    console.log(state);
-    console.log(
-      gameId,
-      action,
-      gameMode,
-      boardSize,
-      showOnlyBoard,
-      index,
-      warningMessage
-    );
-
     if (action === "view") {
+      const userNameInTeamA = state.team.A["user_" + viewerFid]?.username;
+      const userNameInTeamB = state.team.B["user_" + viewerFid]?.username;
+
       return new ImageResponse(
         buildView({
-          challenger1Title: "@playerx",
-          challenger2Title: "followers",
+          challenger1Title:
+            state.gameMode === GameMode.OPEN
+              ? userNameInTeamA || "Anyone"
+              : "@playerx",
+          challenger2Title:
+            state.gameMode === GameMode.OPEN
+              ? userNameInTeamB || "Anyone"
+              : "followers",
           bottomTitle: "Reversi",
           version: "v0.1.0",
           copyright: "",
@@ -90,6 +89,7 @@ Deno.serve(async (req: Request) => {
     let errorMessage = "";
     let isFinished = false;
     let isDraw = false;
+    let newViewerFid = viewerFid;
 
     try {
       if (action === "move") {
@@ -122,6 +122,7 @@ Deno.serve(async (req: Request) => {
           throw new Error("Invalid messageBytes");
         }
 
+        newViewerFid = fid;
         // TODO: validate messageBytes and fid here as well
 
         const action: Action = [fid, move[1], move[2], messageBytes];
@@ -148,10 +149,10 @@ Deno.serve(async (req: Request) => {
       errorMessage = err.message;
     }
 
-    const postUrl = `${urlOrigin}/${gameId}/move?index=${state.actions.length}`;
+    const postUrl = `${urlOrigin}/${gameId}/move?index=${state.actions.length}&viewerFid=${newViewerFid}`;
     const imageUrl = `${urlOrigin}/${gameId}/view?message=${errorMessage}&index=${
       state.actions.length
-    }&time=${Date.now()}`;
+    }&time=${Date.now()}&viewerFid=${newViewerFid}`;
 
     const html = getFrameHtml(
       {
@@ -165,8 +166,7 @@ Deno.serve(async (req: Request) => {
               {
                 label: "Play Again",
                 action: "link",
-                target:
-                  "https://warpcast.com/~/compose?text=Hello%20world!&embeds[]=https://farcaster.xyz",
+                target: "https://reversi-frame.jok.io",
               },
               {
                 label: "Claim",
@@ -230,6 +230,8 @@ const parseParams = (url: string) => {
 
   const warningMessage = theUrl.searchParams.get("message") ?? "";
 
+  const viewerFid = theUrl.searchParams.get("viewerFid") ?? "";
+
   return {
     gameId,
     action,
@@ -239,5 +241,6 @@ const parseParams = (url: string) => {
     index,
     warningMessage,
     urlOrigin: theUrl.origin,
+    viewerFid,
   };
 };

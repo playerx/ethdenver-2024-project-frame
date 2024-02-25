@@ -2,6 +2,7 @@ import {
   connectMongo,
   MangoRepo,
 } from "https://deno.land/x/jok_mango@v2.1.1/mod.ts";
+import { State } from "./game/types.ts";
 
 const connectionString = Deno.env.get("MONGO_CONNECTION_STRING");
 
@@ -15,5 +16,5 @@ export const db = {
 
 export type RoomDb = {
   id: string;
-  state: any;
+  state: State;
 };

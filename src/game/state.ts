@@ -65,7 +65,7 @@ export const gameMove = async (
         if (!playerTeam) {
           playerTeam = state.activeTeamId;
 
-          // TODO: get username by fid
+          // get username by fid
           const userData = await fetch(
             "https://fnames.farcaster.xyz/transfers?fid=" + fid
           ).then((x) => x.json());
