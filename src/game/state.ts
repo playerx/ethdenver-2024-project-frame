@@ -15,6 +15,7 @@ export const getGameState = async (
       id,
       gameMode,
       boardSize,
+      winnerTeamId: null,
       activeTeamId: "A",
       team: {
         A: [],
@@ -120,9 +121,14 @@ export const gameMove = async (
     state.nextPossibleMoves = generatePossibleMoves(state);
   }
 
-  await db.games.updateOne({ id }, { $set: { state } }, { upsert: true });
-
   const winner = analyzeWinner(state.cells);
+
+  if (winner) {
+    state.winnerTeamId = winner;
+    state.activeTeamId = "" as any;
+  }
+
+  await db.games.updateOne({ id }, { $set: { state } }, { upsert: true });
 
   return { state, winner };
 };

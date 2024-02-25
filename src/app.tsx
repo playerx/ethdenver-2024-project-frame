@@ -1,7 +1,6 @@
 import { ImageResponse } from "npm:@vercel/og";
-import { DRAW } from "./game/analyzeWinner.ts";
 import { gameMove, getGameState } from "./game/state.ts";
-import { Action, GameMode, State } from "./game/types.ts";
+import { Action, DRAW, GameMode, State } from "./game/types.ts";
 import { getFrameHtml } from "./helper/getFrameHtml.ts";
 import { buildView } from "./view.tsx";
 
@@ -48,12 +47,18 @@ Deno.serve(async (req: Request) => {
         buildView({
           challenger1Title:
             state.gameMode === GameMode.OPEN
-              ? userNameInTeamA || "Anyone"
+              ? (state.winnerTeamId === "A" ? "👑 " : "") +
+                (state.activeTeamId === "A" ? "➡️ " : "") +
+                (userNameInTeamA || "Anyone")
               : "@playerx",
+
           challenger2Title:
             state.gameMode === GameMode.OPEN
-              ? userNameInTeamB || "Anyone"
+              ? (state.winnerTeamId === "B" ? " 👑" : "") +
+                (userNameInTeamB || "Anyone") +
+                (state.activeTeamId === "B" ? " ⬅️" : "")
               : "followers",
+
           bottomTitle: "Reversi",
           version: "v0.1.0",
           copyright: "",
@@ -160,10 +165,22 @@ Deno.serve(async (req: Request) => {
       errorMessage = err.message;
     }
 
-    const postUrl = `${urlOrigin}/${gameId}/move?index=${state.actions.length}&viewerFid=${newViewerFid}&gameMode=${gameMode}&boardSize=${boardSize}`;
-    const imageUrl = `${urlOrigin}/${gameId}/view?message=${errorMessage}&index=${
-      state.actions.length
-    }&time=${Date.now()}&viewerFid=${newViewerFid}&gameMode=${gameMode}&boardSize=${boardSize}`;
+    const postUrl = `${urlOrigin}/${gameId}/move?${new URLSearchParams({
+      index: state.actions.length.toString(),
+      viewerFid: newViewerFid.toString(),
+      gameMode: gameMode.toString(),
+      boardSize: boardSize.toString(),
+    })}`;
+
+    const imageUrl = `${urlOrigin}/${gameId}/view?${new URLSearchParams({
+      message: errorMessage,
+      index: state.actions.length.toString(),
+      time: Date.now().toString(),
+      viewerFid: newViewerFid.toString(),
+      gameMode: gameMode.toString(),
+      boardSize: boardSize.toString(),
+      isDraw: "1",
+    }).toString()}`;
 
     const html = getFrameHtml(
       {

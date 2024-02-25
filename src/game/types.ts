@@ -1,3 +1,5 @@
+export const DRAW = "DRAW";
+
 export type Move = [
   /**
    * for a default state it will have a placeholder
@@ -67,6 +69,8 @@ export type State = {
   };
 
   activeTeamId: TeamId;
+
+  winnerTeamId: TeamId | typeof DRAW | null;
 };
 
 export type TeamId = keyof State["team"];
