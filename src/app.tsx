@@ -1,9 +1,8 @@
-import { encode as base64Encode } from "https://deno.land/std@0.166.0/encoding/base64.ts";
-import { ImageResponse } from "npm:@vercel/og";
 import { gameMove, getGameState } from "./game/state.ts";
 import { Action, DRAW, GameMode, State } from "./game/types.ts";
+import { buildViewAction } from "./helper/buildViewAction.ts";
 import { getFrameHtml } from "./helper/getFrameHtml.ts";
-import { buildView } from "./view.tsx";
+import { replayImages } from "./helper/replayImages.ts";
 
 const ROUTE = new URLPattern({ pathname: "/:gameId{/:action}?" });
 
@@ -136,35 +135,11 @@ Deno.serve(async (req: Request) => {
 
     // render all frames
     if (state.winnerTeamId || true) {
-      const prevActions: Action[] = [];
-      console.log("state.actions", state.actions.length);
-      for (const action of state.actions) {
-        prevActions.push(action);
-        console.log("replay", prevActions.length, state.actions.length);
-
-        let s = await getGameState(
-          state.id,
-          state.gameMode,
-          state.boardSize,
-          true
-        );
-
-        for (const a of prevActions) {
-          const { state: nextState } = await gameMove(s, a, true);
-          s = nextState;
-        }
-
-        const image = buildViewAction({
-          state: s,
-          viewerFid: "",
-          boardSize: s.boardSize,
-          showOnlyBoard: false,
-          warningMessage: "",
-        });
-
-        const base64 = base64Encode(await image.arrayBuffer());
-        htmlRes += `<img style="max-height: 300px; margin: 10px; border: 1px solid silver;" src="data:image/png;base64,${base64}" />`;
-      }
+      const images = await replayImages(state, debug);
+      images.forEach(
+        (x) =>
+          (htmlRes += `<img style="max-height: 300px; margin: 10px; border: 1px solid silver;" src="data:image/png;base64,${x}" />`)
+      );
     }
 
     const html = getFrameHtml(
@@ -210,6 +185,7 @@ Deno.serve(async (req: Request) => {
       },
     });
   } catch (err) {
+    console.log(err);
     return new Response(err.message, { status: 400 });
   }
 });
@@ -260,96 +236,4 @@ const parseParams = (url: string) => {
     viewerFid,
     debug,
   };
-};
-
-const buildViewAction = ({
-  state,
-  viewerFid,
-  boardSize,
-  showOnlyBoard,
-  warningMessage,
-}: {
-  state: State;
-  viewerFid: string;
-  boardSize: number;
-  showOnlyBoard: boolean;
-  warningMessage: string;
-}) => {
-  const teamOwnedCells = state.cells
-    .map((a, y) =>
-      a.map((teamId, x) => ({
-        x,
-        y,
-        teamId,
-      }))
-    )
-    .flat()
-    .filter((x) => x.teamId);
-
-  const teamAPoints = teamOwnedCells.filter((x) => x.teamId === "A").length;
-  const teamBPoints = teamOwnedCells.filter((x) => x.teamId === "B").length;
-  const userNameInTeamA = state.team.A[viewerFid]?.username;
-  const userNameInTeamB = state.team.B[viewerFid]?.username;
-
-  return new ImageResponse(
-    buildView({
-      challenger1Title:
-        state.gameMode === GameMode.OPEN
-          ? (state.winnerTeamId === "A" ? "👑 " : "") +
-            (state.activeTeamId === "A" ? "➡️ " : "") +
-            (userNameInTeamA || "Anyone")
-          : "@playerx",
-
-      challenger2Title:
-        state.gameMode === GameMode.OPEN
-          ? (state.winnerTeamId === "B" ? " 👑" : "") +
-            (userNameInTeamB || "Anyone") +
-            (state.activeTeamId === "B" ? " ⬅️" : "")
-          : "followers",
-
-      bottomTitle: "Reversi",
-      version: "v0.1.0",
-      copyright: "",
-      boardSize,
-      showOnlyBoard,
-      warningMessage,
-
-      leftTeam: {
-        name: "Blue Team",
-        color: "#2196F3",
-        points: teamAPoints,
-        moves: teamOwnedCells
-          .filter((c) => c.teamId === "A")
-          .map((c) => [c.y, c.x]),
-
-        nextMovePreviews: state.nextPossibleMoves
-          .filter((x) => x[0] === "A")
-          .map((x) => [x[1], x[2]]),
-
-        usernames: Object.values(state.team.A).map((x) => x.username),
-      },
-
-      rightTeam: {
-        name: "Red Team",
-        color: "#F44336",
-        points: teamBPoints,
-        moves: teamOwnedCells
-          .filter((c) => c.teamId === "B")
-          .map((c) => [c.y, c.x]),
-
-        nextMovePreviews: state.nextPossibleMoves
-          .filter((x) => x[0] === "B")
-          .map((x) => [x[1], x[2]]),
-
-        usernames: Object.values(state.team.B).map((x) => x.username),
-      },
-    }),
-    {
-      width: showOnlyBoard ? 630 : 1200,
-      height: 630,
-      headers: {
-        "Cache-Control": "no-cache",
-      },
-    }
-  );
 };

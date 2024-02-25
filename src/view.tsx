@@ -22,6 +22,8 @@ type Props = {
   version: string;
   showOnlyBoard: boolean;
   boardSize: number;
+  lastMove?: Position;
+  lastPlayerUsername?: string;
 
   leftTeam: Team;
   rightTeam: Team;
@@ -40,7 +42,10 @@ export const buildView = ({
   boardSize,
   showOnlyBoard,
   warningMessage,
+  lastMove,
+  lastPlayerUsername,
 }: Props) => {
+  console.log(lastMove);
   return (
     <div
       style={{
@@ -90,7 +95,14 @@ export const buildView = ({
             }}
           >
             {leftTeam.usernames.map((x) => (
-              <div key={x} style={{ padding: 10 }}>
+              <div
+                key={x}
+                style={{
+                  padding: 10,
+                  background:
+                    x === lastPlayerUsername ? "#FFF9C4" : "transparent",
+                }}
+              >
                 {x}
               </div>
             ))}
@@ -200,6 +212,10 @@ export const buildView = ({
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
+                    background:
+                      lastMove && lastMove[0] === x && lastMove[1] === y
+                        ? "#FFF9C4"
+                        : "transparent",
                   }}
                 >
                   {leftTeam.moves.find(([mY, mX]) => mY === y && mX === x) && (
@@ -381,7 +397,14 @@ export const buildView = ({
             }}
           >
             {rightTeam.usernames.map((x) => (
-              <div key={x} style={{ padding: 10 }}>
+              <div
+                key={x}
+                style={{
+                  padding: 10,
+                  background:
+                    x === lastPlayerUsername ? "#FFF9C4" : "transparent",
+                }}
+              >
                 {x}
               </div>
             ))}

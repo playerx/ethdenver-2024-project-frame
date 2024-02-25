@@ -60,6 +60,9 @@ export type State = {
   cells: (TeamId | null)[][];
   nextPossibleMoves: Move[];
 
+  lastMove?: Move;
+  lastPlayerFid?: number;
+
   /**
    * Teams and member fids
    */

@@ -111,6 +111,9 @@ export const gameMove = async (
     reversedDisks.forEach((x) => {
       state.cells[x.y][x.x] = playerTeam;
     });
+
+    state.lastMove = move;
+    state.lastPlayerFid = action[0];
   }
 
   state.actions.push(action);
