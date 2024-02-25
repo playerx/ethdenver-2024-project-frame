@@ -7,9 +7,11 @@ import { Action, GameMode, Move, State, TeamId } from "./types.ts";
 export const getGameState = async (
   id: string,
   gameMode: GameMode,
-  boardSize: number
+  boardSize: number,
+  dryRun?: boolean
 ) => {
-  let state = await db.games.getById(id).then((x) => x?.state);
+  let state = dryRun ? null : await db.games.getById(id).then((x) => x?.state);
+
   if (!state) {
     state = {
       id,
@@ -18,8 +20,8 @@ export const getGameState = async (
       winnerTeamId: null,
       activeTeamId: "A",
       team: {
-        A: [],
-        B: [],
+        A: {},
+        B: {},
       },
       actions: [],
       cells: new Array(boardSize)
@@ -47,13 +49,10 @@ export const getGameState = async (
 };
 
 export const gameMove = async (
-  id: string,
+  state: State,
   action: Action,
-  gameMode: GameMode,
-  boardSize: number
+  dryRun?: boolean
 ) => {
-  const state: State = await getGameState(id, gameMode, boardSize);
-
   let move: Move = null as any;
 
   // validate move, per mode the logic is different
@@ -62,9 +61,9 @@ export const gameMove = async (
       {
         const [fid, y, x] = action;
 
-        let playerTeam: TeamId | null = state.team.A["user_" + fid]
+        let playerTeam: TeamId | null = state.team.A[fid]
           ? "A"
-          : state.team.B["user_" + fid]
+          : state.team.B[fid]
           ? "B"
           : null;
 
@@ -82,7 +81,7 @@ export const gameMove = async (
 
           const username = userInfo?.username ?? "User " + fid;
 
-          state.team[state.activeTeamId]["user_" + fid] = { username };
+          state.team[state.activeTeamId][fid] = { username };
         }
 
         if (playerTeam !== state.activeTeamId) {
@@ -110,6 +109,7 @@ export const gameMove = async (
   }
 
   state.actions.push(action);
+  console.log("added action", state.id, state.actions.length);
 
   state.activeTeamId = state.activeTeamId === "A" ? "B" : "A";
 
@@ -132,7 +132,13 @@ export const gameMove = async (
     state.activeTeamId = "" as any;
   }
 
-  await db.games.updateOne({ id }, { $set: { state } }, { upsert: true });
+  if (!dryRun) {
+    await db.games.updateOne(
+      { id: state.id },
+      { $set: { state } },
+      { upsert: true }
+    );
+  }
 
   return { state, winner };
 };
