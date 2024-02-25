@@ -84,9 +84,11 @@ export const gameMove = async (
           state.team[state.activeTeamId][fid] = { username };
         }
 
-        if (playerTeam !== state.activeTeamId) {
-          throw new Error("It's your opponent's turn");
-        }
+        // if (playerTeam !== state.activeTeamId) {
+        //   throw new Error(
+        //     "It's your opponent's turn. Ask your friend to make a move."
+        //   );
+        // }
 
         move = [playerTeam, y, x];
       }
