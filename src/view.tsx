@@ -7,6 +7,7 @@ type Team = {
   name: string;
   color: string;
   usernames: string[];
+  points: number;
 
   moves: Position[];
 
@@ -116,12 +117,60 @@ export const buildView = ({
             justifyContent: "center",
           }}
         >
+          <div
+            style={{
+              display: "flex",
+              flex: 1,
+              alignItems: "center",
+              justifyContent: "flex-start",
+              paddingTop: 10,
+            }}
+          >
+            <div
+              style={{
+                border: "3px solid " + Color(leftTeam.color).darken(0.3).hex(),
+                backgroundColor: leftTeam.color,
+                borderRadius: "100%",
+                width: 30,
+                height: 30,
+                marginRight: 4,
+              }}
+            ></div>
+            <div style={{ color: leftTeam.color }}>
+              {leftTeam.points.toString()}
+            </div>
+          </div>
+
           <div style={{ color: Color(leftTeam.color).darken(0.2).hex() }}>
             {challenger1Title}
           </div>
           <div style={{ marginLeft: 7, marginRight: 7 }}>vs</div>
           <div style={{ color: Color(rightTeam.color).darken(0.2).hex() }}>
             {challenger2Title}
+          </div>
+
+          <div
+            style={{
+              display: "flex",
+              flex: 1,
+              alignItems: "center",
+              justifyContent: "flex-end",
+              paddingTop: 10,
+            }}
+          >
+            <div style={{ color: rightTeam.color }}>
+              {rightTeam.points.toString()}
+            </div>
+            <div
+              style={{
+                border: "3px solid " + Color(rightTeam.color).darken(0.3).hex(),
+                backgroundColor: rightTeam.color,
+                borderRadius: "100%",
+                width: 30,
+                height: 30,
+                marginLeft: 4,
+              }}
+            ></div>
           </div>
         </div>
 
@@ -334,6 +383,36 @@ export const buildView = ({
                 {x}
               </div>
             ))}
+          </div>
+        </div>
+      )}
+
+      {!!warningMessage && (
+        <div
+          style={{
+            position: "absolute",
+            top: 50,
+            left: 10,
+            right: 10,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <div
+            style={{
+              border: "1px solid orange",
+              background: "yellow",
+              color: "brown",
+              borderRadius: 10,
+              padding: 10,
+              minWidth: 200,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            {warningMessage}
           </div>
         </div>
       )}
