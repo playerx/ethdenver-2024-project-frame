@@ -61,11 +61,12 @@ export const gameMove = async (
       {
         const [fid, y, x] = action;
 
-        let playerTeam: TeamId | null = state.team.A[fid]
-          ? "A"
-          : state.team.B[fid]
-          ? "B"
-          : null;
+        let playerTeam: TeamId | null = null;
+        // state.team.A[fid]
+        //   ? "A"
+        //   : state.team.B[fid]
+        //   ? "B"
+        //   : null;
 
         if (!playerTeam) {
           playerTeam = state.activeTeamId;
