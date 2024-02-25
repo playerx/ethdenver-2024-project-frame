@@ -167,10 +167,10 @@ Deno.serve(async (req: Request) => {
       errorMessage = err.message;
     }
 
-    const postUrl = `${urlOrigin}/${gameId}/move?index=${state.actions.length}&viewerFid=${newViewerFid}`;
+    const postUrl = `${urlOrigin}/${gameId}/move?index=${state.actions.length}&viewerFid=${newViewerFid}&gameMode=${gameMode}&boardSize=${boardSize}`;
     const imageUrl = `${urlOrigin}/${gameId}/view?message=${errorMessage}&index=${
       state.actions.length
-    }&time=${Date.now()}&viewerFid=${newViewerFid}`;
+    }&time=${Date.now()}&viewerFid=${newViewerFid}&gameMode=${gameMode}&boardSize=${boardSize}`;
 
     const html = getFrameHtml(
       {
@@ -229,7 +229,7 @@ const parseParams = (url: string) => {
   const gameId = requestData.pathname.groups.gameId!;
   const action = requestData.pathname.groups.action!;
 
-  let gameMode = theUrl.searchParams.get("mode")! as GameMode;
+  let gameMode = theUrl.searchParams.get("mode")! as any;
   if (!GameMode[gameMode]) {
     gameMode = GameMode.OPEN;
   }

@@ -4,13 +4,6 @@ import { generatePossibleMoves } from "./generatePossibleMoves.ts";
 import { getReversedDisks } from "./getReversedDisks.ts";
 import { Action, GameMode, Move, State, TeamId } from "./types.ts";
 
-const DEFAULT_MOVES: Move[] = [
-  ["A", 3, 3],
-  ["A", 3, 4],
-  ["B", 4, 3],
-  ["B", 4, 4],
-];
-
 export const getGameState = async (
   id: string,
   gameMode: GameMode,
@@ -34,7 +27,15 @@ export const getGameState = async (
       nextPossibleMoves: [],
     };
 
-    DEFAULT_MOVES.forEach(([teamId, y, x]) => {
+    const center = Math.ceil(boardSize / 2);
+    const defaultMoves: Move[] = [
+      ["A", center - 1, center - 1],
+      ["A", center - 1, center],
+      ["B", center, center - 1],
+      ["B", center, center],
+    ];
+
+    defaultMoves.forEach(([teamId, y, x]) => {
       state!.cells[y][x] = teamId;
     });
 
