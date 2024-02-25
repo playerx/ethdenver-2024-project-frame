@@ -12,7 +12,7 @@ Deno.serve(async (req: Request) => {
       ? req.url.slice(0, req.url.length - 1)
       : req.url;
 
-    const {
+    let {
       gameId,
       action,
       gameMode,
@@ -25,6 +25,9 @@ Deno.serve(async (req: Request) => {
     } = parseParams(url);
 
     let state: State = await getGameState(gameId, gameMode, boardSize);
+
+    boardSize = state.boardSize;
+    gameMode = state.gameMode;
 
     if (action === "view") {
       const teamOwnedCells = state.cells

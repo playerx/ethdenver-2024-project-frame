@@ -115,6 +115,7 @@ export const buildView = ({
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
+            minWidth: 550,
           }}
         >
           <div
@@ -179,6 +180,7 @@ export const buildView = ({
             display: "flex",
             flexDirection: "column",
             border: "1px solid silver",
+            alignSelf: "center",
           }}
         >
           {new Array(boardSize).fill(0).map((_, y) => (
