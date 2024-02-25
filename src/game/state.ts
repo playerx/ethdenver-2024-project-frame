@@ -51,7 +51,8 @@ export const getGameState = async (
 export const gameMove = async (
   state: State,
   action: Action,
-  dryRun?: boolean
+  dryRun?: boolean,
+  debug?: boolean
 ) => {
   let move: Move = null as any;
 
@@ -61,12 +62,13 @@ export const gameMove = async (
       {
         const [fid, y, x] = action;
 
-        let playerTeam: TeamId | null = null;
-        // state.team.A[fid]
-        //   ? "A"
-        //   : state.team.B[fid]
-        //   ? "B"
-        //   : null;
+        let playerTeam: TeamId | null = debug
+          ? null
+          : state.team.A[fid]
+          ? "A"
+          : state.team.B[fid]
+          ? "B"
+          : null;
 
         if (!playerTeam) {
           playerTeam = state.activeTeamId;
@@ -85,11 +87,11 @@ export const gameMove = async (
           state.team[state.activeTeamId][fid] = { username };
         }
 
-        // if (playerTeam !== state.activeTeamId) {
-        //   throw new Error(
-        //     "It's your opponent's turn. Ask your friend to make a move."
-        //   );
-        // }
+        if (!debug && playerTeam !== state.activeTeamId) {
+          throw new Error(
+            "It's your opponent's turn. Ask your friend to make a move."
+          );
+        }
 
         move = [playerTeam, y, x];
       }

@@ -23,6 +23,7 @@ Deno.serve(async (req: Request) => {
       warningMessage,
       urlOrigin,
       viewerFid,
+      debug,
     } = parseParams(url);
 
     let state: State = await getGameState(gameId, gameMode, boardSize);
@@ -96,7 +97,12 @@ Deno.serve(async (req: Request) => {
 
         const action: Action = [fid, move[1], move[2], messageBytes];
 
-        const { state: newState, winner } = await gameMove(state, action);
+        const { state: newState, winner } = await gameMove(
+          state,
+          action,
+          undefined,
+          debug
+        );
 
         if (winner) {
           isFinished = true;
@@ -144,7 +150,7 @@ Deno.serve(async (req: Request) => {
         );
 
         for (const a of prevActions) {
-          const { state: nextState } = await gameMove(s, a);
+          const { state: nextState } = await gameMove(s, a, true);
           s = nextState;
         }
 
@@ -240,6 +246,8 @@ const parseParams = (url: string) => {
 
   const viewerFid = theUrl.searchParams.get("viewerFid") ?? "";
 
+  const debug = !theUrl.searchParams.has("debug");
+
   return {
     gameId,
     action,
@@ -250,6 +258,7 @@ const parseParams = (url: string) => {
     warningMessage,
     urlOrigin: theUrl.origin,
     viewerFid,
+    debug,
   };
 };
 
