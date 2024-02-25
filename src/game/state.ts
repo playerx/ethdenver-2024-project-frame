@@ -109,6 +109,8 @@ export const gameMove = async (
     });
   }
 
+  state.actions.push(action);
+
   state.activeTeamId = state.activeTeamId === "A" ? "B" : "A";
 
   state.nextPossibleMoves = generatePossibleMoves(state);
