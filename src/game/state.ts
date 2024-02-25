@@ -27,14 +27,17 @@ export const getGameState = async (
         B: [],
       },
       actions: [],
-      moves: DEFAULT_MOVES,
+      cells: new Array(boardSize)
+        .fill(0)
+        .map(() => new Array(boardSize).fill(0).map(() => null)),
       nextPossibleMoves: [],
     };
 
-    state.nextPossibleMoves = generatePossibleMoves(
-      state,
-      generateCellsBasedOnMoves(state)
-    );
+    DEFAULT_MOVES.forEach(([teamId, y, x]) => {
+      state!.cells[y][x] = teamId;
+    });
+
+    state.nextPossibleMoves = generatePossibleMoves(state);
   }
 
   return state;
@@ -92,42 +95,38 @@ export const gameMove = async (
     throw new Error("Invalid move");
   }
 
-  state.moves.push(move);
-
-  const cells = generateCellsBasedOnMoves(state);
+  {
+    const [playerTeam, y, x] = move;
+    state.cells[y][x] = playerTeam;
+  }
 
   state.activeTeamId = state.activeTeamId === "A" ? "B" : "A";
 
-  state.nextPossibleMoves = generatePossibleMoves(state, cells);
+  state.nextPossibleMoves = generatePossibleMoves(state);
 
   /**
    * If player don't have any move, switch to the next player
    */
   if (!state.nextPossibleMoves.length) {
     state.activeTeamId = state.activeTeamId === "A" ? "B" : "A";
-    state.nextPossibleMoves = generatePossibleMoves(state, cells);
+    state.nextPossibleMoves = generatePossibleMoves(state);
   }
 
-  const dbResult = await db.games.updateOne(
-    { id },
-    { $set: { state } },
-    { upsert: true }
-  );
-  console.log("dbResult", dbResult);
+  await db.games.updateOne({ id }, { $set: { state } }, { upsert: true });
 
-  const winner = analyzeWinner(cells);
+  const winner = analyzeWinner(state.cells);
 
   return { state, winner };
 };
 
-const generateCellsBasedOnMoves = (state: State) => {
-  const cells: (TeamId | null)[][] = new Array(state.boardSize)
-    .fill(0)
-    .map(() => new Array(state.boardSize).fill(0).map(() => null));
+// const generateCellsBasedOnMoves = (state: State) => {
+//   const cells: (TeamId | null)[][] = new Array(state.boardSize)
+//     .fill(0)
+//     .map(() => new Array(state.boardSize).fill(0).map(() => null));
 
-  state.moves.forEach(([teamId, y, x]) => {
-    cells[y][x] = teamId;
-  });
+//   state.cells.forEach(([teamId, y, x]) => {
+//     cells[y][x] = teamId;
+//   });
 
-  return cells;
-};
+//   return cells;
+// };

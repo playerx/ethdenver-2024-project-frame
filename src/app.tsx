@@ -28,8 +28,19 @@ Deno.serve(async (req: Request) => {
     let state: State = await getGameState(gameId, gameMode, boardSize);
 
     if (action === "view") {
-      const teamAPoints = state.moves.filter((x) => x[0] === "A").length;
-      const teamBPoints = state.moves.filter((x) => x[0] === "B").length;
+      const teamOwnedCells = state.cells
+        .map((a, y) =>
+          a.map((teamId, x) => ({
+            x,
+            y,
+            teamId,
+          }))
+        )
+        .flat()
+        .filter((x) => x.teamId);
+
+      const teamAPoints = teamOwnedCells.filter((x) => x.teamId === "A").length;
+      const teamBPoints = teamOwnedCells.filter((x) => x.teamId === "B").length;
       const userNameInTeamA = state.team.A["user_" + viewerFid]?.username;
       const userNameInTeamB = state.team.B["user_" + viewerFid]?.username;
       console.log({
@@ -57,9 +68,9 @@ Deno.serve(async (req: Request) => {
             name: "Blue Team",
             color: "#2196F3",
             points: teamAPoints,
-            moves: state.moves
-              .filter((x) => x[0] === "A")
-              .map((x) => [x[1], x[2]]),
+            moves: teamOwnedCells
+              .filter((c) => c.teamId === "A")
+              .map((c) => [c.y, c.x]),
 
             nextMovePreviews: state.nextPossibleMoves
               .filter((x) => x[0] === "A")
@@ -72,9 +83,9 @@ Deno.serve(async (req: Request) => {
             name: "Red Team",
             color: "#F44336",
             points: teamBPoints,
-            moves: state.moves
-              .filter((x) => x[0] === "B")
-              .map((x) => [x[1], x[2]]),
+            moves: teamOwnedCells
+              .filter((c) => c.teamId === "B")
+              .map((c) => [c.y, c.x]),
 
             nextMovePreviews: state.nextPossibleMoves
               .filter((x) => x[0] === "B")

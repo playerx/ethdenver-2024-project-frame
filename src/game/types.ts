@@ -55,7 +55,7 @@ export type State = {
   boardSize: number;
   actions: Action[];
 
-  moves: Move[];
+  cells: (TeamId | null)[][];
   nextPossibleMoves: Move[];
 
   /**
