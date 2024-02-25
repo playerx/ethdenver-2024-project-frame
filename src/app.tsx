@@ -43,10 +43,7 @@ Deno.serve(async (req: Request) => {
       const teamBPoints = teamOwnedCells.filter((x) => x.teamId === "B").length;
       const userNameInTeamA = state.team.A["user_" + viewerFid]?.username;
       const userNameInTeamB = state.team.B["user_" + viewerFid]?.username;
-      console.log({
-        teamAPoints,
-        teamBPoints,
-      });
+
       return new ImageResponse(
         buildView({
           challenger1Title:
@@ -145,16 +142,12 @@ Deno.serve(async (req: Request) => {
 
         const action: Action = [fid, move[1], move[2], messageBytes];
 
-        console.log("move", action);
-
         const { state: newState, winner } = await gameMove(
           gameId,
           action,
           gameMode,
           boardSize
         );
-
-        console.log(newState);
 
         if (winner) {
           isFinished = true;
