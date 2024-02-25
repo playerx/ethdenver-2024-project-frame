@@ -14,7 +14,7 @@ export function generatePossibleMoves(state: State): Move[] {
 
       const point = <Point>{ x, y };
 
-      if (getReversedDisks(state, point, cells).length) {
+      if (getReversedDisks(state, point).length) {
         result.push(point);
       }
     }

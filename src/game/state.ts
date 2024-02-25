@@ -1,6 +1,7 @@
 import { db } from "../db.ts";
 import { analyzeWinner } from "./analyzeWinner.ts";
 import { generatePossibleMoves } from "./generatePossibleMoves.ts";
+import { getReversedDisks } from "./getReversedDisks.ts";
 import { Action, GameMode, Move, State, TeamId } from "./types.ts";
 
 const DEFAULT_MOVES: Move[] = [
@@ -98,6 +99,12 @@ export const gameMove = async (
   {
     const [playerTeam, y, x] = move;
     state.cells[y][x] = playerTeam;
+
+    const reversedDisks = getReversedDisks(state, { x, y });
+
+    reversedDisks.forEach((x) => {
+      state.cells[x.y][x.x] = playerTeam;
+    });
   }
 
   state.activeTeamId = state.activeTeamId === "A" ? "B" : "A";

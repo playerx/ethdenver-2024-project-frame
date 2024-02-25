@@ -1,11 +1,9 @@
-import { Point, State, TeamId } from "./types.ts";
+import { Point, State } from "./types.ts";
 
-export function getReversedDisks(
-  state: State,
-  point: Point,
-  cells: (TeamId | null)[][]
-): Point[] {
+export function getReversedDisks(state: State, point: Point): Point[] {
   const result: Point[] = [];
+
+  const cells = state.cells;
 
   if (!cells.length) {
     return [];
