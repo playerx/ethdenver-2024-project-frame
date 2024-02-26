@@ -17,7 +17,7 @@ export const viewApi = async (req: Request) => {
   return buildViewAction({
     state,
     viewerFid,
-    boardSize,
+    boardSize: state.boardSize,
     showOnlyBoard,
     warningMessage,
   });
