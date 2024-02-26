@@ -43,9 +43,13 @@ export const renderFrame = ({
   const gameId = state.id;
   const isFinished = !!state.winnerTeamId;
 
-  const urlOrigin = urlOriginParam.endsWith("/")
+  let urlOrigin = urlOriginParam.endsWith("/")
     ? urlOriginParam.slice(0, urlOriginParam.length - 1)
     : urlOriginParam;
+
+  if (urlOrigin.startsWith("http://")) {
+    urlOrigin = urlOrigin.replace("http://", "https://");
+  }
 
   const postUrl = `${urlOrigin}/move/${gameId}?${new URLSearchParams({
     index: state.actions.length.toString(),
