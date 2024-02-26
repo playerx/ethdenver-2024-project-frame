@@ -1,7 +1,7 @@
 {
   "tasks": {
-    "start": "deno run --watch -A --env src/app.tsx",
-    "debug": "deno run --inspect -A --env src/app.tsx"
+    "start": "deno run --watch -A --env reversi-frame/src/app.ts",
+    "debug": "deno run --inspect -A --env reversi-frame/src/app.ts"
   },
   "fmt": {
     "semiColons": false,

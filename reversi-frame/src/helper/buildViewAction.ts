@@ -1,4 +1,4 @@
-import { ImageResponse } from "npm:@vercel/og";
+import { ImageResponse } from "../deps.ts";
 import { GameMode, State } from "../game/types.ts";
 import { buildView } from "../view.tsx";
 

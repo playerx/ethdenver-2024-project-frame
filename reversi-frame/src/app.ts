@@ -1,6 +1,5 @@
 import { gameMove, getGameState } from "./game/state.ts";
 import { Action, DRAW, GameMode, State } from "./game/types.ts";
-import { buildGif } from "./helper/buildGif.ts";
 import { buildViewAction } from "./helper/buildViewAction.ts";
 import { getFrameHtml } from "./helper/getFrameHtml.ts";
 import { replayImages } from "./helper/replayImages.ts";
@@ -142,13 +141,28 @@ Deno.serve(async (req: Request) => {
           (htmlRes += `<img style="max-height: 300px; margin: 10px; border: 1px solid silver;" src="data:image/png;base64,${x.base64}" />`)
       );
 
-      const gifImage = await buildGif(
-        1200,
-        630,
-        images.map((x) => x.buffer)
-      );
+      // const gifImage = await buildGif(
+      //   1200,
+      //   630,
+      //   images.map((x) => x.buffer)
+      // );
 
-      htmlRes += `<img style="max-height: 300px; margin: 10px; border: 1px solid silver;" src="data:image/png;base64,${gifImage}" />`;
+      // const gifImage = await fetch("https://gif-builder.jok.io", {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //     Authorization: "Bearer test_auth_token",
+      //   },
+      //   body: JSON.stringify({
+      //     width: 1200,
+      //     height: 630,
+      //     images: images.map((x) => base64.encodeBase64(x.buffer)),
+      //   }),
+      // }).then((x) => x.blob());
+
+      // const gifImageUrl = URL.createObjectURL(gifImage);
+
+      // htmlRes += `<img style="max-height: 300px; margin: 10px; border: 1px solid silver;" src="data:image/png;base64,${gifImageUrl}" />`;
     }
 
     const html = getFrameHtml(

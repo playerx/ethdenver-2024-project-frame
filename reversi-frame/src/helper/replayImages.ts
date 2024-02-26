@@ -1,4 +1,4 @@
-import { encode as base64Encode } from "https://deno.land/std@0.166.0/encoding/base64.ts";
+import { base64Encode } from "../deps.ts";
 import { gameMove, getGameState } from "../game/state.ts";
 import { Action, State } from "../game/types.ts";
 import { buildViewAction } from "./buildViewAction.ts";

@@ -1,5 +1,4 @@
-import Color from "npm:color";
-import React from "npm:react";
+import { Color, React } from "./deps.ts";
 
 type Position = [x: number, y: number];
 
