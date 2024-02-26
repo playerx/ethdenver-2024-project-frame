@@ -34,6 +34,7 @@ app.post('/', async (req, res) => {
 
     const buff = await generateGif(width, height, images)
 
+    console.log('successfully created!', Date.now())
     res.writeHead(200, { 'Content-Type': 'image/gif' });
     res.end(buff);
 })

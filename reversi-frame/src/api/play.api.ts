@@ -54,7 +54,7 @@ export const renderFrame = ({
     boardSize: state.boardSize.toString(),
   })}`;
 
-  const playUrl = `${urlOrigin}/move/${gameId}?${new URLSearchParams({
+  const playUrl = `${urlOrigin}/play/${gameId}?${new URLSearchParams({
     index: state.actions.length.toString(),
   })}`;
 
@@ -68,8 +68,10 @@ export const renderFrame = ({
     isDraw: "1",
   }).toString()}`;
 
+  const replayUrl = `${urlOrigin}/replay/${gameId}.gif`;
+
   const htmlBody = playHtml
-    .replaceAll("{viewUrl}", imageUrl + "&wide")
+    .replaceAll("{viewUrl}", isFinished ? replayUrl : imageUrl + "&wide")
     .replaceAll("{frameUrl}", playUrl)
     .replaceAll("{buttonText}", isFinished ? "Share" : "Share & Play")
     .replaceAll(
@@ -96,17 +98,21 @@ export const renderFrame = ({
             {
               label: "Play Again",
               action: "link",
-              target: "https://reversi-frame.jok.io",
+              target: urlOrigin,
             },
             {
-              label: "Claim",
+              label: "Mint",
               action: "link",
-              target: `https://mint.me/${gameId}`,
+              target: playUrl,
             },
           ]
         : [
             { label: "Move", action: "post" },
-            { label: "Refresh", action: "post" },
+            {
+              label: "Refresh",
+              action: "post",
+              target: playUrl + `&time= ${Date.now().toString()}`,
+            },
           ],
       version: "vNext",
     },

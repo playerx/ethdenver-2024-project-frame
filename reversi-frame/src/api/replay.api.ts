@@ -5,7 +5,7 @@ import { replayImages } from "../helper/replayImages.ts";
 
 const GIF_AUTH_TOKEN = Deno.env.get("GIF_AUTH_TOKEN");
 
-export const gifApi = async (req: Request) => {
+export const replayApi = async (req: Request) => {
   const url = new URL(req.url);
   const { gameMode, boardSize, debug } = parseQueryParams(url);
 

@@ -1,7 +1,7 @@
 import { defaultApi } from "./api/default.api.ts";
 import { moveApi } from "./api/move.api.ts";
 import { playApi } from "./api/play.api.ts";
-import { gifApi } from "./api/replay.api.ts";
+import { replayApi } from "./api/replay.api.ts";
 import { staticApi } from "./api/static.api.ts";
 import { viewApi } from "./api/view.api.ts";
 
@@ -19,7 +19,7 @@ Deno.serve((req: Request) => {
     }
 
     if (pathname.startsWith("/replay")) {
-      return gifApi(req);
+      return replayApi(req);
     }
 
     if (pathname.startsWith("/move")) {
