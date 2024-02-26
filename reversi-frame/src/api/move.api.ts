@@ -29,6 +29,7 @@ export const moveApi = async (req: Request) => {
     const postData = await req.json();
 
     const buttonIndex = postData?.untrustedData?.buttonIndex;
+    console.log("buttonIndex", buttonIndex);
 
     /**
      * Move button click

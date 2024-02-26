@@ -15,12 +15,12 @@ export const defaultApi = (req: Request) => {
     url = url.replace("http://", "https://");
   }
 
-  const playUrl =
+  const newGameUrl =
     "https://reversi-frame.jok.io/play/" + new ObjectId().toHexString();
 
   const fullPlayUrl =
     "https://warpcast.com/~/compose?text=Lets%20%23play%20%23reversi&embeds[]=" +
-    encodeURIComponent(playUrl);
+    encodeURIComponent(newGameUrl);
 
   if (req.method === "POST") {
     return Response.redirect(fullPlayUrl, 302);

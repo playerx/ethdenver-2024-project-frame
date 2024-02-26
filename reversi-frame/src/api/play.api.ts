@@ -1,3 +1,4 @@
+import { ObjectId } from "../deps.ts";
 import { getGameState } from "../game/state.ts";
 import { State } from "../game/types.ts";
 import { getFrameHtml } from "../helper/getFrameHtml.ts";
@@ -74,6 +75,13 @@ export const renderFrame = ({
 
   const replayUrl = `${urlOrigin}/replay/${gameId}.gif`;
 
+  const newGameUrl =
+    "https://reversi-frame.jok.io/play/" + new ObjectId().toHexString();
+
+  const fullPlayUrl =
+    "https://warpcast.com/~/compose?text=Lets%20%23play%20%23reversi&embeds[]=" +
+    encodeURIComponent(newGameUrl);
+
   const htmlBody = playHtml
     .replaceAll("{viewUrl}", isFinished ? replayUrl : imageUrl + "&wide")
     .replaceAll("{frameUrl}", playUrl)
@@ -102,7 +110,7 @@ export const renderFrame = ({
             {
               label: "Play Again",
               action: "link",
-              target: urlOrigin,
+              target: fullPlayUrl,
             },
             {
               label: "Mint",
