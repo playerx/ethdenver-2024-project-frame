@@ -18,7 +18,7 @@ export const defaultApi = (req: Request) => {
   const playUrl =
     "https://reversi-frame.jok.io/play/" + new ObjectId().toHexString();
 
-  if (req.method === "post") {
+  if (req.method === "POST") {
     return Response.redirect(playUrl, 302);
   }
 
@@ -30,7 +30,7 @@ export const defaultApi = (req: Request) => {
       image: imageUrl,
       imageAspectRatio: "1:1",
       postUrl: url,
-      inputText: "Reversi Game - play in Frame!",
+      inputText: "Multiplayer Game - Play in Frame!",
       buttons: [{ label: "Start a new game", action: "post_redirect" }],
       version: "vNext",
     },
