@@ -36,6 +36,7 @@ export const replayImages = async (state: State, debug: boolean) => {
     });
   }
 
+  // apply each action and get the image
   for (const action of state.actions) {
     prevActions.push(action);
 
