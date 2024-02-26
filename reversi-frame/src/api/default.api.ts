@@ -1,13 +1,15 @@
-import { ObjectId } from "../deps.ts";
+import { ObjectId, encodeBase64 } from "../deps.ts";
 import { getFrameHtml } from "../helper/getFrameHtml.ts";
 
 const indexHtml = await Deno.readTextFile("./public/index.html").catch(
   () => "Hello. `public/index.html` file does not exist"
 );
 
+const promoImage = await Deno.readFileSync("./public/promo.png");
+
 export const defaultApi = (req: Request) => {
   let url = req.url;
-  const imageUrl = "https://reversi-frame.jok.io/public/promo.png";
+  const imageUrl = "data:image/png;base64," + encodeBase64(promoImage);
 
   if (url.startsWith("http://")) {
     url = url.replace("http://", "https://");
@@ -28,7 +30,7 @@ export const defaultApi = (req: Request) => {
       image: imageUrl,
       imageAspectRatio: "1:1",
       postUrl: url,
-      inputText: "Reversi Game - The first realtime game in Frame!",
+      inputText: "Reversi Game - play in Frame!",
       buttons: [{ label: "Start a new game", action: "post_redirect" }],
       version: "vNext",
     },
