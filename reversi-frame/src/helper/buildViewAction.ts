@@ -33,6 +33,15 @@ export const buildViewAction = ({
   const viewerUserNameInTeamA = state.team.A[viewerFid]?.username;
   const viewerUserNameInTeamB = state.team.B[viewerFid]?.username;
 
+  let lastPlayerUsername = state.lastPlayerFid
+    ? state.team.A[state.lastPlayerFid]?.username ||
+      state.team.B[state.lastPlayerFid]?.username
+    : "";
+
+  if (lastPlayerUsername) {
+    lastPlayerUsername = "@" + lastPlayerUsername;
+  }
+
   return new ImageResponse(
     buildView({
       challenger1Title:
@@ -59,10 +68,7 @@ export const buildViewAction = ({
         ? [state.lastMove[2], state.lastMove[1]]
         : undefined,
 
-      lastPlayerUsername: state.lastPlayerFid
-        ? state.team.A[state.lastPlayerFid]?.username ||
-          state.team.B[state.lastPlayerFid]?.username
-        : "",
+      lastPlayerUsername,
 
       leftTeam: {
         name: "Blue Team",

@@ -117,7 +117,6 @@ export const gameMove = async (
   }
 
   state.actions.push(action);
-  console.log("added action", state.id, state.actions.length);
 
   state.activeTeamId = state.activeTeamId === "A" ? "B" : "A";
 

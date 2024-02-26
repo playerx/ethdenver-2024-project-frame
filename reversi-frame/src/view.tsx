@@ -45,7 +45,6 @@ export const buildView = ({
   lastMove,
   lastPlayerUsername,
 }: Props) => {
-  console.log(lastMove);
   return (
     <div
       style={{
@@ -127,7 +126,7 @@ export const buildView = ({
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            minWidth: 550,
+            minWidth: 500,
           }}
         >
           <div

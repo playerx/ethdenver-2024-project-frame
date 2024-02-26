@@ -5,8 +5,7 @@ import { buildViewAction } from "./buildViewAction.ts";
 
 export const replayImages = async (state: State, debug: boolean) => {
   const prevActions: Action[] = [];
-  console.log("state.actions", state.actions.length);
-  const res: string[] = [];
+  const res: { buffer: ArrayBuffer; base64: string }[] = [];
 
   // initial state
   {
@@ -26,9 +25,13 @@ export const replayImages = async (state: State, debug: boolean) => {
       isReplay: true,
     });
 
-    const base64 = base64Encode(await image.arrayBuffer());
+    const buffer = await image.arrayBuffer();
+    const base64 = base64Encode(buffer);
 
-    res.push(base64);
+    res.push({
+      buffer,
+      base64,
+    });
   }
 
   for (const action of state.actions) {
@@ -49,9 +52,10 @@ export const replayImages = async (state: State, debug: boolean) => {
       warningMessage: "",
     });
 
-    const base64 = base64Encode(await image.arrayBuffer());
+    const buffer = await image.arrayBuffer();
+    const base64 = base64Encode(buffer);
 
-    res.push(base64);
+    res.push({ buffer, base64 });
   }
 
   return res;

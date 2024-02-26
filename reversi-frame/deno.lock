@@ -6,8 +6,11 @@
       "npm:canvas": "npm:canvas@2.11.2",
       "npm:color": "npm:color@4.2.3",
       "npm:frames.js": "npm:frames.js@0.5.3_@xmtp+frames-validator@0.5.1_next@14.1.0__react@18.2.0__react-dom@18.2.0___react@18.2.0_react@18.2.0_react-dom@18.2.0__react@18.2.0",
+      "npm:gif-encoder-2": "npm:gif-encoder-2@1.0.5",
       "npm:gif.js": "npm:gif.js@0.2.0",
+      "npm:gif.js.optimized": "npm:gif.js.optimized@1.0.1",
       "npm:gifencoder": "npm:gifencoder@2.0.1",
+      "npm:modern-gif": "npm:modern-gif@2.0.2",
       "npm:mongodb@6.1.0": "npm:mongodb@6.1.0",
       "npm:react": "npm:react@18.2.0",
       "npm:satori": "npm:satori@0.10.13",
@@ -512,6 +515,14 @@
           "wide-align": "wide-align@1.1.5"
         }
       },
+      "gif-encoder-2@1.0.5": {
+        "integrity": "sha512-fsRAKbZuUoZ7FYGjpFElmflTkKwsn/CzAmL/xDl4558aTAgysIDCUF6AXWO8dmai/ApfZACbPVAM+vPezJXlFg==",
+        "dependencies": {}
+      },
+      "gif.js.optimized@1.0.1": {
+        "integrity": "sha512-IS0F42Xken6lp/iR4irgG4r52tvxRkEKsXGZmlUHUOb00SWNMezJOJwkVaJk2MLW53rqzMbPnnBtEhs9hcMJ9w==",
+        "dependencies": {}
+      },
       "gif.js@0.2.0": {
         "integrity": "sha512-bYxCoT8OZKmbxY8RN4qDiYuj4nrQDTzgLRcFVovyona1PTWNePzI4nzOmotnlOFIzTk/ZxAHtv+TfVLiBWj/hw==",
         "dependencies": {}
@@ -656,6 +667,16 @@
       },
       "mkdirp@1.0.4": {
         "integrity": "sha512-vVqVZQyf3WLx2Shd0qJ9xuvqgAyKPLAiqITEtqW0oIUjzo3PePDd6fW9iFz30ef7Ysp/oiWqbhszeGWW2T6Gzw==",
+        "dependencies": {}
+      },
+      "modern-gif@2.0.2": {
+        "integrity": "sha512-5hHKdI2POGIC6VAnN5Ay2zAoKu+RvGNXMN4GZaIEwiUvFPNIfBb6tTGJ3jHCjeaEL2Kt80ZCrk7atfdN9FPVdw==",
+        "dependencies": {
+          "modern-palette": "modern-palette@2.0.0"
+        }
+      },
+      "modern-palette@2.0.0": {
+        "integrity": "sha512-wKZcom2QzK6sS6h5RLYHEkd3V3maQLzgkI+ekDCimlk7dfXa63aekZcy+7KS+8JEqIDeY/yV1CAvA7l+7u6QHA==",
         "dependencies": {}
       },
       "mongodb-connection-string-url@2.6.0": {
@@ -1080,10 +1101,23 @@
       }
     }
   },
+  "redirects": {
+    "https://deno.land/x/canvas/mod.ts": "https://deno.land/x/canvas@v1.4.1/mod.ts"
+  },
   "remote": {
+    "https://deno.land/std@0.106.0/encoding/base64.ts": "eecae390f1f1d1cae6f6c6d732ede5276bf4b9cd29b1d281678c054dc5cc009e",
     "https://deno.land/std@0.166.0/encoding/base64.ts": "c57868ca7fa2fbe919f57f88a623ad34e3d970d675bdc1ff3a9d02bba7409db2",
     "https://deno.land/std@0.203.0/dotenv/load.ts": "0636983549b98f29ab75c9a22a42d9723f0a389ece5498fe971e7bb2556a12e2",
     "https://deno.land/std@0.203.0/dotenv/mod.ts": "1da8c6d0e7f7d8a5c2b19400b763bc11739df24acec235dda7ea2cfd3d300057",
+    "https://deno.land/x/canvas@v1.4.1/deps.ts": "e956026d98094946166e06d7b799290b732db015813870d84e04e33ab88e98f3",
+    "https://deno.land/x/canvas@v1.4.1/mod.ts": "a4e16972647ceafef58612a377a218372454c99d2c9da615a132694597114f80",
+    "https://deno.land/x/canvas@v1.4.1/src/base64.ts": "0928031fdba0c43b617154fbe2eb7578366460c04da1422933ae5e936d3d0349",
+    "https://deno.land/x/canvas@v1.4.1/src/canvas.ts": "58119999b04f68ebeed2627485c5c24c5b0c029707edde0b6568814f9049a3a8",
+    "https://deno.land/x/canvas@v1.4.1/src/canvaskit.ts": "c3d807472cbb3e1d9fc01bb43ff974ef796c4b010178d1595be5fa793cce5e7d",
+    "https://deno.land/x/canvas@v1.4.1/src/color_util.ts": "28f1072f0a5acbe7add7fac2f452311a47b44c080806fc4057de2d2e405c6c1c",
+    "https://deno.land/x/canvas@v1.4.1/src/lib.js": "bb21711589bfbc8997b455cdf53e3150e23289f3b44809188041b1d2fc7924fa",
+    "https://deno.land/x/canvas@v1.4.1/src/types.ts": "67d5800f8f4b0a407e0251676a03ae91b5f50a3ed53e6b72dc5984113cb93128",
+    "https://deno.land/x/canvas@v1.4.1/src/wasm.js": "449d72cc14fc4142a5853f944df49a744d852981d09c5515528ede8aebb0afda",
     "https://deno.land/x/jok_mango@v2.1.1/deps.ts": "482c8d88768b64339a06c673326dccf8d5e55bd1dcd76dec04ccdd1521b62297",
     "https://deno.land/x/jok_mango@v2.1.1/mod.ts": "3afca1cf1576b88a3ab34136594329fb328bb3cf079dfc2e97d57f223f2a72ba",
     "https://deno.land/x/jok_mango@v2.1.1/src/connectMongo.ts": "daf0123862215c6007709e480f4585202982eab47f04eb6426d022dc29ae82d5",

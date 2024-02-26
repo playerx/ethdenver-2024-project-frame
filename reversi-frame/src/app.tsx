@@ -1,5 +1,6 @@
 import { gameMove, getGameState } from "./game/state.ts";
 import { Action, DRAW, GameMode, State } from "./game/types.ts";
+import { buildGif } from "./helper/buildGif.ts";
 import { buildViewAction } from "./helper/buildViewAction.ts";
 import { getFrameHtml } from "./helper/getFrameHtml.ts";
 import { replayImages } from "./helper/replayImages.ts";
@@ -138,8 +139,16 @@ Deno.serve(async (req: Request) => {
       const images = await replayImages(state, debug);
       images.forEach(
         (x) =>
-          (htmlRes += `<img style="max-height: 300px; margin: 10px; border: 1px solid silver;" src="data:image/png;base64,${x}" />`)
+          (htmlRes += `<img style="max-height: 300px; margin: 10px; border: 1px solid silver;" src="data:image/png;base64,${x.base64}" />`)
       );
+
+      const gifImage = await buildGif(
+        1200,
+        630,
+        images.map((x) => x.buffer)
+      );
+
+      htmlRes += `<img style="max-height: 300px; margin: 10px; border: 1px solid silver;" src="data:image/png;base64,${gifImage}" />`;
     }
 
     const html = getFrameHtml(
