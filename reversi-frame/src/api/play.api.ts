@@ -58,7 +58,7 @@ export const renderFrame = ({
     index: state.actions.length.toString(),
   })}`;
 
-  const imageUrl = `${urlOrigin}/view/${gameId}?${new URLSearchParams({
+  const imageUrl = `${urlOrigin}/view/${gameId}.png?${new URLSearchParams({
     message: errorMessage,
     index: state.actions.length.toString(),
     time: Date.now().toString(),

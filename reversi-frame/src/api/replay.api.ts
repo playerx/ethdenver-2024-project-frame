@@ -9,7 +9,7 @@ export const gifApi = async (req: Request) => {
   const url = new URL(req.url);
   const { gameMode, boardSize, debug } = parseQueryParams(url);
 
-  const gameId = url.pathname.replace("/gif/", "").replace(".png", "");
+  const gameId = url.pathname.replace("/replay/", "").replace(".gif", "");
   if (!gameId) {
     return new Response("Please provide gameId");
   }
@@ -34,8 +34,6 @@ export const gifApi = async (req: Request) => {
   });
 
   const blob = await gifImage.blob();
-
-  console.log(blob);
 
   return new Response(blob, {
     headers: { "Content-Type": "image/gif" },
