@@ -17,6 +17,7 @@ export const getGameState = async (
       id,
       gameMode,
       boardSize,
+      gameHashtag: "",
       winnerTeamId: null,
       activeTeamId: "A",
       team: {
@@ -132,14 +133,17 @@ export const gameMove = async (
 
   const winner = analyzeWinner(state.cells);
 
-  console.log("winner check", winner);
-
   if (winner) {
     state.winnerTeamId = winner;
     state.activeTeamId = "" as any;
   }
 
   if (!dryRun) {
+    if (state.actions.length === 1) {
+      const allGamesCount = await db.games.count();
+      state.gameHashtag = `#${allGamesCount}`;
+    }
+
     await db.games.updateOne(
       { id: state.id },
       { $set: { state } },

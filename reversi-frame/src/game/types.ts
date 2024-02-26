@@ -53,6 +53,7 @@ export enum GameMode {
 
 export type State = {
   id: string;
+  gameHashtag: string;
   gameMode: GameMode;
   boardSize: number;
   actions: Action[];

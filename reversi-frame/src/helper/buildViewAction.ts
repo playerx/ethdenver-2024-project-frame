@@ -30,8 +30,8 @@ export const buildViewAction = ({
 
   const teamAPoints = teamOwnedCells.filter((x) => x.teamId === "A").length;
   const teamBPoints = teamOwnedCells.filter((x) => x.teamId === "B").length;
-  const viewerUserNameInTeamA = state.team.A[viewerFid]?.username;
-  const viewerUserNameInTeamB = state.team.B[viewerFid]?.username;
+  const viewerUserNameInTeamA = state.team.A[+viewerFid]?.username;
+  const viewerUserNameInTeamB = state.team.B[+viewerFid]?.username;
 
   let lastPlayerUsername = state.lastPlayerFid
     ? state.team.A[state.lastPlayerFid]?.username ||
@@ -60,7 +60,7 @@ export const buildViewAction = ({
 
       bottomTitle: "Reversi",
       version: "v0.1.0",
-      copyright: "",
+      copyright: state.gameHashtag ? `Game ${state.gameHashtag}` : "New Game",
       boardSize,
       showOnlyBoard,
       warningMessage,
