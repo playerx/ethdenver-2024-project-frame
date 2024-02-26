@@ -1,15 +1,13 @@
-import { ObjectId, encodeBase64 } from "../deps.ts";
+import { ObjectId } from "../deps.ts";
 import { getFrameHtml } from "../helper/getFrameHtml.ts";
 
 const indexHtml = await Deno.readTextFile("./public/index.html").catch(
   () => "Hello. `public/index.html` file does not exist"
 );
 
-const promoImage = await Deno.readFileSync("./public/promo.png");
-
 export const defaultApi = (req: Request) => {
   let url = req.url;
-  const imageUrl = "data:image/png;base64," + encodeBase64(promoImage);
+  const imageUrl = "https://reversi-frame.jok.io/public/promo.png";
 
   if (url.startsWith("http://")) {
     url = url.replace("http://", "https://");
