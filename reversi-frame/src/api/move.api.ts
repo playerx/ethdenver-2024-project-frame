@@ -27,15 +27,6 @@ export const moveApi = async (req: Request) => {
     }
 
     const postData = await req.json();
-    const fid = postData?.untrustedData?.castId?.fid;
-    if (!fid) {
-      throw new Error("fid not found in request");
-    }
-
-    const inputText: string = postData?.untrustedData?.inputText?.toUpperCase();
-    if (!inputText) {
-      throw new Error("Please type the move: A, B, etc.");
-    }
 
     const buttonIndex = postData?.untrustedData?.buttonIndex;
 
@@ -43,6 +34,17 @@ export const moveApi = async (req: Request) => {
      * Move button click
      */
     if (buttonIndex === 1) {
+      const fid = postData?.untrustedData?.castId?.fid;
+      if (!fid) {
+        throw new Error("fid not found in request");
+      }
+
+      const inputText: string =
+        postData?.untrustedData?.inputText?.toUpperCase();
+      if (!inputText) {
+        throw new Error("Please type the move: A, B, etc.");
+      }
+
       const moveIndex = inputText.charCodeAt(0) - "A".charCodeAt(0);
       const move = state.nextPossibleMoves[moveIndex];
       if (!move) {
