@@ -30,7 +30,7 @@ export const defaultApi = (req: Request) => {
       image: imageUrl,
       imageAspectRatio: "1:1",
       postUrl: url,
-      inputText: "Multiplayer Game - Play in Frame!",
+      inputText: "Multiplayer Game | Play in Frame",
       buttons: [{ label: "Start a new game", action: "post_redirect" }],
       version: "vNext",
     },
