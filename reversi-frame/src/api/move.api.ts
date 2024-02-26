@@ -20,12 +20,6 @@ export const moveApi = async (req: Request) => {
   let errorMessage = "";
 
   try {
-    if (state.actions.length !== index) {
-      throw new Error(
-        "Someone already made a move, now you see updated state."
-      );
-    }
-
     const postData = await req.json();
 
     const buttonIndex = postData?.untrustedData?.buttonIndex;
@@ -35,6 +29,12 @@ export const moveApi = async (req: Request) => {
      * Move button click
      */
     if (buttonIndex === 1) {
+      if (state.actions.length !== index) {
+        throw new Error(
+          "Someone already made a move, now you see updated state."
+        );
+      }
+
       const fid = postData?.untrustedData?.castId?.fid;
       if (!fid) {
         throw new Error("fid not found in request");
