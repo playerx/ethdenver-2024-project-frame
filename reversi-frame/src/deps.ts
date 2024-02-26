@@ -5,6 +5,7 @@ export { default as React } from "npm:react";
 export { encodeBase64 } from "https://deno.land/std@0.217.0/encoding/base64.ts";
 export {
   MangoRepo,
+  ObjectId,
   connectMongo,
 } from "https://deno.land/x/jok_mango@v2.1.1/mod.ts";
 

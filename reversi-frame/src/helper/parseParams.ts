@@ -24,7 +24,7 @@ export const parseQueryParams = (url: URL) => {
 
   const viewerFid = url.searchParams.get("viewerFid") ?? "";
 
-  const debug = !!ENABLE_DEBUG_MODE && !url.searchParams.has("debug");
+  const debug = !url.searchParams.has("debug"); // && !!ENABLE_DEBUG_MODE
 
   return {
     gameMode,

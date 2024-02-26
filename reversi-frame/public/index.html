@@ -1,1 +1,92 @@
-Default page
+<style>
+    body {
+        font-family: "Roboto", sans-serif;
+        font-weight: 400;
+    }
+
+    img {
+        max-width: 100vw;
+        max-height: 300;
+    }
+
+    a {
+        text-decoration: none;
+    }
+
+    a span {
+        max-width: 200px;
+        margin-top: 20px;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .pushable {
+        background: #9C27B0;
+        border-radius: 12px;
+        border: none;
+        padding: 0;
+        cursor: pointer;
+        outline-offset: 4px;
+    }
+
+    .front {
+        display: block;
+        padding: 12px 42px;
+        border-radius: 12px;
+        font-size: 1.25rem;
+        background: #6A1B9A;
+        color: white;
+        transform: translateY(-6px);
+    }
+
+    .pushable:active .front {
+        transform: translateY(-2px);
+    }
+
+    .front {
+        transition:
+            transform 600ms cubic-bezier(.3, .7, .4, 1);
+    }
+
+    .pushable:hover .front {
+        transform: translateY(-6px);
+        transition:
+            transform 250ms cubic-bezier(.3, .7, .4, 1.5);
+    }
+
+    .pushable:active .front {
+        transform: translateY(-2px);
+        transition: transform 34ms;
+    }
+</style>
+
+<h2>Reversi Frame</h2>
+<h3>Online multiplayer game</h3>
+<h3>Built for <a href="https://docs.farcaster.xyz"
+       target="_blank">Farcaster</a> network.</h3>
+
+<h4>
+    How to play
+</h4>
+<ol>
+    <li>Start - a new game</li>
+    <li>Cast - the link in Warpcast (or other Farcaster client)</li>
+    <li>Move - Make your move!</li>
+</ol>
+<br />
+<br />
+<a class="pushable"
+   target="_blank"
+   href="https://warpcast.com/~/compose?text=Lets%20%23play%20%23reversi%20%23online&embeds[]={frameUrl}">
+
+    <span class="front">
+        Start a new game
+    </span>
+</a>
+
+<br />
+<p>
+    The game rules are pretty simple. However, if you are not familiar please check here:
+    <a href="https://en.wikipedia.org/wiki/Reversi#Rules"
+       target="_blank">Reversi Game Rules</a>
+</p>
