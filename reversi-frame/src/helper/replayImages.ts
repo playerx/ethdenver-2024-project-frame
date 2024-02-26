@@ -1,4 +1,4 @@
-import { base64Encode } from "../deps.ts";
+import { encodeBase64 } from "../deps.ts";
 import { gameMove, getGameState } from "../game/state.ts";
 import { Action, State } from "../game/types.ts";
 import { buildViewAction } from "./buildViewAction.ts";
@@ -26,7 +26,7 @@ export const replayImages = async (state: State, debug: boolean) => {
     });
 
     const buffer = await image.arrayBuffer();
-    const base64 = base64Encode(buffer);
+    const base64 = encodeBase64(buffer);
 
     res.push({
       buffer,
@@ -53,7 +53,7 @@ export const replayImages = async (state: State, debug: boolean) => {
     });
 
     const buffer = await image.arrayBuffer();
-    const base64 = base64Encode(buffer);
+    const base64 = encodeBase64(buffer);
 
     res.push({ buffer, base64 });
   }
