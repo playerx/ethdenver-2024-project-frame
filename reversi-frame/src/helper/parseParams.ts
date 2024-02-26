@@ -1,5 +1,7 @@
 import { GameMode } from "../game/types.ts";
 
+const ENABLE_DEBUG_MODE = Deno.env.get("ENABLE_DEBUG_MODE");
+
 export const parseQueryParams = (url: URL) => {
   let gameMode = url.searchParams.get("mode")! as any;
   if (!GameMode[gameMode]) {
@@ -22,7 +24,7 @@ export const parseQueryParams = (url: URL) => {
 
   const viewerFid = url.searchParams.get("viewerFid") ?? "";
 
-  const debug = !url.searchParams.has("debug");
+  const debug = !!ENABLE_DEBUG_MODE && !url.searchParams.has("debug");
 
   return {
     gameMode,

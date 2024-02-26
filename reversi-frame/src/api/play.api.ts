@@ -10,7 +10,7 @@ const playHtml = await Deno.readTextFile("./public/play.html").catch(
 export const playApi = async (req: Request) => {
   const url = new URL(req.url);
 
-  const gameId = url.pathname.replace("/play", "");
+  const gameId = url.pathname.replace("/play/", "");
   if (!gameId) {
     return new Response("Please provide gameId");
   }
@@ -36,12 +36,16 @@ type RenderProps = {
 
 export const renderFrame = ({
   state,
-  urlOrigin,
+  urlOrigin: urlOriginParam,
   viewerFid,
   errorMessage,
 }: RenderProps) => {
   const gameId = state.id;
   const isFinished = !!state.winnerTeamId;
+
+  const urlOrigin = urlOriginParam.endsWith("/")
+    ? urlOriginParam.slice(0, urlOriginParam.length - 1)
+    : urlOriginParam;
 
   const postUrl = `${urlOrigin}/move/${gameId}?${new URLSearchParams({
     index: state.actions.length.toString(),

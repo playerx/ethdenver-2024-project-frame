@@ -6,7 +6,7 @@ import { renderFrame } from "./play.api.ts";
 export const moveApi = async (req: Request) => {
   const url = new URL(req.url);
 
-  const gameId = url.pathname.replace("/view/", "");
+  const gameId = url.pathname.replace("/move/", "");
   if (!gameId) {
     return new Response("Please provide gameId");
   }
