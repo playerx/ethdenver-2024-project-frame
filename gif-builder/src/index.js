@@ -3,8 +3,29 @@ const express = require('express');
 const GIFEncoder = require('gifencoder');
 const { createCanvas, loadImage } = require('canvas');
 
+const validAuthTokens = process.env.AUTH_TOKENS?.split(',') ?? ['test_auth_token']
+
 const app = express();
-app.use(express.json({ limit: '150mb' }));
+
+app.use((req, res, next) => {
+    if (req.method === 'POST') {
+        const authToken = req.headers['authorization']?.replace('bearer ', '')?.replace('Bearer ', '')
+
+        if (!validAuthTokens.includes(authToken)) {
+            res.writeHead(401, { 'Content-Type': 'text/html' });
+            res.end('INVALID_AUTH_TOKEN')
+            return
+        }
+    }
+
+    return next()
+})
+
+app.use(express.json({ limit: '300mb' }));
+
+app.get('/', (_, res) => {
+    res.end('Welcome to GIF Builder. Please visit jok.io for more information.');
+})
 
 app.post('/', async (req, res) => {
     const width = req.body.width
