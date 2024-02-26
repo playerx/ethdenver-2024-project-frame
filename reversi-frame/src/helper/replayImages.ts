@@ -16,6 +16,8 @@ export const replayImages = async (state: State, debug: boolean) => {
       true
     );
 
+    s.gameHashtag = state.gameHashtag;
+
     const image = buildViewAction({
       state: s,
       viewerFid: "",
@@ -38,6 +40,7 @@ export const replayImages = async (state: State, debug: boolean) => {
     prevActions.push(action);
 
     let s = await getGameState(state.id, state.gameMode, state.boardSize, true);
+    s.gameHashtag = state.gameHashtag;
 
     for (const a of prevActions) {
       const { state: nextState } = await gameMove(s, a, true, debug);
@@ -50,6 +53,7 @@ export const replayImages = async (state: State, debug: boolean) => {
       boardSize: s.boardSize,
       showOnlyBoard: false,
       warningMessage: "",
+      isReplay: true,
     });
 
     const buffer = await image.arrayBuffer();

@@ -71,9 +71,10 @@ export const renderFrame = ({
   const htmlBody = playHtml
     .replaceAll("{viewUrl}", imageUrl + "&wide")
     .replaceAll("{frameUrl}", playUrl)
+    .replaceAll("{buttonText}", isFinished ? "Share" : "Share & Play")
     .replaceAll(
       "{freeText}",
-      state.winnerTeamId
+      isFinished
         ? "Game Finished" +
             (state.winnerTeamId === "A"
               ? ". 👑 Winner: Blue Team"

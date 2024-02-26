@@ -80,7 +80,7 @@ export const gameMove = async (
           ).then((x) => x.json());
 
           const userInfo = userData.transfers.sort(
-            (a, b) => b.timestamp - a.timestamp
+            (a: any, b: any) => b.timestamp - a.timestamp
           )[0];
 
           const username = userInfo?.username ?? "User " + fid;
